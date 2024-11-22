@@ -1,35 +1,29 @@
 import {createTheme, PaletteMode, Shadows} from '@mui/material';
 import {AlertProps} from '@mui/material';
+import {ThemeOptions} from '@mui/material/styles';
 
+type OwnerState = Pick<AlertProps, 'severity'>;
 declare module '@mui/material/styles' {
+    interface TypeBackground {
+        default: string;
+        paper: string;
+    }
+
     interface Palette {
-        toast: {
-            success: string;
-            error: string;
-            info: string;
-            warning: string;
-        };
+        bright: Palette['primary'];
     }
 
     interface PaletteOptions {
-        toast?: {
-            success: string;
-            error: string;
-            info: string;
-            warning: string;
-        };
+        bright: PaletteOptions['primary'];
+
     }
 }
-type OwnerState = Pick<AlertProps, 'severity'>;
-
 import {
-    indigo as muiIndigo,
     red as muiRed,
     green as muiGreen,
     yellow as muiYellow,
-    grey as muiGrey,
-    blueGrey as muiBlueGrey,
 } from '@mui/material/colors';
+import {generateColorVariants, IColorSettings} from "../util/common.utils.ts";
 
 
 // Shadows
@@ -38,8 +32,7 @@ const customShadows: Shadows = [...defaultShadows];
 customShadows[1] = '0 4px 16px rgba(0, 0, 0, 0.2)';
 
 // Get Theme Options
-export const getThemeOptions = (mode: PaletteMode) => {
-    console.log('theme mode withing the theme config is', mode)
+export const getThemeOptions = (mode: PaletteMode): ThemeOptions => {
     const isDark = mode === 'dark';
 
     type SEVERITY_STATES = 'success' | 'info' | 'warning' | 'error' | 'secondary' | 'primary' | 'dark';
@@ -63,26 +56,32 @@ export const getThemeOptions = (mode: PaletteMode) => {
         info: isDark ? "#00cfdd" : "#00cfdd",
         dark: isDark ? "#fff" : "#495563"
     };
+   
+
+    const background = {
+        light: '#FFFFFF',
+        dark: '#1A202C',
+    };
+
+    const primaryColor = "#827a9f";
+    // const primaryColor = "#eeaf02";
+    const secondaryColor = "#436d93";
+    // const secondaryColor = "#05787b";
+    const primaryVariants = generateColorVariants(primaryColor) as IColorSettings;
+    const secondaryVariants = generateColorVariants(secondaryColor) as IColorSettings;
+
     return {
         palette: {
             mode,
-            primary: {
-                light: muiIndigo[200],
-                main: muiIndigo[500],
-                dark: muiIndigo[800],
-                contrastText: '#fff',
-            },
-            secondary: {
-                light: muiBlueGrey[200],
-                main: muiBlueGrey[500],
-                dark: muiBlueGrey[800],
-                contrastText: '#fff',
-            },
+            contrastThreshold: 2,
+            primary: primaryVariants,
+            secondary: secondaryVariants,
             error: {
                 light: muiRed[200],
                 main: muiRed[500],
                 dark: muiRed[800],
             },
+
             warning: {
                 light: muiYellow[200],
                 main: muiYellow[500],
@@ -93,24 +92,29 @@ export const getThemeOptions = (mode: PaletteMode) => {
                 main: muiGreen[500],
                 dark: muiGreen[800],
             },
-            grey: muiGrey,
+            grey: {
+                50: '#FAFAFA',
+                100: '#F5F5F5',
+                200: '#EEEEEE',
+                300: '#E0E0E0',
+                400: '#BDBDBD',
+                500: '#9E9E9E',
+            },
             background: {
-                default: isDark ? muiGrey[900] : '#fff',
-                paper: isDark ? muiGrey[800] : muiGrey[50],
+                default: isDark ? background.dark : background.light,
+                paper: isDark ? '#2D3748' : '#F7FAFC',
             },
             text: {
-                primary: isDark ? '#fff' : muiGrey[900],
-                secondary: isDark ? muiGrey[500] : muiGrey[700],
+                primary: isDark ? '#FFFFFF' : '#1A202C',
+                secondary: isDark ? '#A0AEC0' : '#718096',
             },
-            toast: {
-                success: ALERT_COLOR['success'],
-                error: ALERT_COLOR['error'],
-                info: ALERT_COLOR['info'],
-                warning: ALERT_COLOR['warning'],
-                primary: ALERT_COLOR['primary'],
-                secondary: ALERT_COLOR['secondary'],
-                dark: ALERT_COLOR['dark'],
+            bright: {
+                main: '#ffffff',
+                light: '#ffffff',
+                dark: '#ffffff',
+                contrastText: '#000000',
             },
+            divider: '#E9EAF2',
         },
         typography: {
             fontFamily: '"Inter", "sans-serif"',
@@ -119,68 +123,61 @@ export const getThemeOptions = (mode: PaletteMode) => {
             h3: {fontSize: '1.875rem'},
             body1: {fontSize: '1rem'},
             body2: {fontSize: '0.875rem'},
+            h6: {
+                fontSize: '1rem',
+            },
+            h5: {
+                fontSize: '1.3rem',
+            },
+            h4: {
+                fontSize: '1.7rem',
+                marginBottom: '1.5rem',
+            },
+            allVariants: {
+                textTransform: 'none',
+            },
         },
-        shape: {
-            borderRadius: 10,
-        },
-        shadows: customShadows,
         components: {
             MuiAlert: {
                 styleOverrides: {
                     root: ({ownerState}: { ownerState: OwnerState }) => ({
-                        backgroundColor: ALERT_BACKGROUND[ownerState.severity as SEVERITY_STATES],
-                        color: ALERT_COLOR[ownerState.severity as SEVERITY_STATES],
+                        backgroundColor: ALERT_BACKGROUND[ownerState.severity as keyof typeof ALERT_BACKGROUND],
+                        color: ALERT_COLOR[ownerState.severity as keyof typeof ALERT_COLOR],
                     }),
                 },
             },
-
-        },
-        MuiPaper: {
-            styleOverrides: {
-                rounded: {
-                    boxShadow: 'rgba(0, 0, 0, 0.08) 0px 4px 12px',
-                    borderRadius: '18px',
+            MuiPaper: {
+                styleOverrides: {
+                    rounded: {
+                        boxShadow: 'rgba(0, 0, 0, 0.08) 0px 4px 12px',
+                        borderRadius: '18px',
+                    },
                 },
             },
-        },
-        MuiCard: {
-            styleOverrides: {
-                root: {
-                    borderRadius: '18px',
-                    boxShadow: 'rgba(0, 0, 0, 0.08) 0px 4px 12px',
+            MuiCard: {
+                styleOverrides: {
+                    root: {
+                        borderRadius: '18px',
+                        boxShadow: 'rgba(0, 0, 0, 0.08) 0px 4px 12px',
+                    },
                 },
             },
-        },
-        MuiButton: {
-            styleOverrides: {
-                root: {
-                    borderRadius: '24px',
-                    paddingBlock: '.9rem',
-                    paddingInline: '1.5rem',
+            MuiButton: {
+                styleOverrides: {
+                    root: {
+                        borderRadius: '24px',
+                        paddingBlock: '.9rem',
+                        paddingInline: '1.5rem',
+                    },
                 },
             },
-        },
-        MuiIconButton: {
-            styleOverrides: {
-                root: {},
-            },
-        },
-        MuiOutlinedInput: {
-            styleOverrides: {
-                root: {
-                    borderRadius: '18px',
+            MuiOutlinedInput: {
+                styleOverrides: {
+                    root: {
+                        borderRadius: '18px',
+                    },
                 },
             },
-        },
-        MuiPopover: {
-            styleOverrides: {
-                paper: {
-                    borderRadius: '4px',
-                },
-            },
-        },
-        MuiCssBaseline: {
-            styleOverrides: ``,
         },
     };
 };
