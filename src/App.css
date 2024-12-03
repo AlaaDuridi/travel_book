@@ -1,9 +1,9 @@
 #root {
-    width: 100%;
-    min-height: 100vh;
+  width: 100%;
+  min-height: 100vh;
 }
 
 .ck-editor__editable_inline {
-    min-height: 15rem;
-    max-height: 30rem;
+  min-height: 15rem;
+  max-height: 30rem;
 }
