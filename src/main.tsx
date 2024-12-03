@@ -1,8 +1,9 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App.tsx';
+import App from './views/app/App.tsx';
 import { CustomThemeProvider } from './contexts/ThemeContext.tsx';
 import CustomToastContainer from './components/CustomToastContainer.tsx';
+import { BrowserRouter } from 'react-router-dom';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -18,7 +19,9 @@ createRoot(document.getElementById('root')!).render(
         draggable
         pauseOnHover
       />
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </CustomThemeProvider>
   </StrictMode>,
 );
