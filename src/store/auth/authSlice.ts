@@ -1,62 +1,47 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import Cookies from 'js-cookie';
 import { ILoginCredentials } from '../../types/models/auth.model';
-import { loginUser, logoutUser } from './authAPI';
+import { loginUserAPI } from './authAPI';
+import getDecodedJWT, { DecodedJWTUser } from '../../util/getDecodedJWT.ts';
 
-interface IAuthState {
-  isAuthenticated: boolean;
+export interface AuthState {
+  user: DecodedJWTUser | null;
   status: 'idle' | 'loading' | 'failed';
 }
 
-const initialState: IAuthState = {
-  isAuthenticated: false,
+const initialState: AuthState = {
+  user: getDecodedJWT(),
   status: 'idle',
 };
 
-// Async thunk for login
-export const loginAsync = createAsyncThunk(
-  'auth/login',
-  async (credentials: ILoginCredentials, { rejectWithValue }) => {
-    try {
-      await loginUser(credentials);
-      return true; // Assume the backend handles setting the cookie
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Login failed');
-    }
-  },
-);
-
-// Async thunk for logout
-export const logoutAsync = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
-  try {
-    await logoutUser();
-    return false; // Update isAuthenticated to false
-  } catch (error: any) {
-    return rejectWithValue(error.response?.data?.message || 'Logout failed');
-  }
+export const loginAsync = createAsyncThunk('auth/login', async (credentials: ILoginCredentials) => {
+  return await loginUserAPI(credentials);
 });
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    signout: (state) => {
+      state.user = null;
+      Cookies.remove('jwt');
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loginAsync.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(loginAsync.fulfilled, (state) => {
-        state.isAuthenticated = true;
+      .addCase(loginAsync.fulfilled, (state, action) => {
         state.status = 'idle';
+        state.user = getDecodedJWT(); // Decode the JWT after login
+        Cookies.set('jwt', action.payload.authentication, { secure: true });
       })
       .addCase(loginAsync.rejected, (state) => {
-        state.isAuthenticated = false;
         state.status = 'failed';
-      })
-      .addCase(logoutAsync.fulfilled, (state) => {
-        state.isAuthenticated = false;
-        state.status = 'idle';
       });
   },
 });
 
+export const { signout } = authSlice.actions;
 export default authSlice.reducer;

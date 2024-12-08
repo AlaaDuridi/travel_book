@@ -1,1 +1,1 @@
-export { default as App } from './LoginForm.tsx';
+export { default } from './LoginForm.tsx';

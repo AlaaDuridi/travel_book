@@ -4,6 +4,8 @@ import App from './views/app/App.tsx';
 import { CustomThemeProvider } from './contexts/ThemeContext.tsx';
 import CustomToastContainer from './components/CustomToastContainer.tsx';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from './store';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -20,7 +22,9 @@ createRoot(document.getElementById('root')!).render(
         pauseOnHover
       />
       <BrowserRouter>
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </BrowserRouter>
     </CustomThemeProvider>
   </StrictMode>,
