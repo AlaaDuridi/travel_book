@@ -3,7 +3,9 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Box, Avatar, Button, Paper, useTheme, Grid, TextField, Typography } from '@mui/material';
 import { LockOutlined } from '@mui/icons-material';
-import { ILoginCredentials } from '../../types/models/auth.model.ts';
+import { ILoginCredentials } from '../../types/models/auth.model';
+import { useAppDispatch } from '../../store/hooks';
+import { loginAsync } from '../../store/auth/authSlice';
 
 const LoginSchema = Yup.object().shape({
   userName: Yup.string().required('Username is required'),
@@ -12,53 +14,58 @@ const LoginSchema = Yup.object().shape({
 
 const LoginForm: React.FC = () => {
   const theme = useTheme();
+  const dispatch = useAppDispatch();
+
   const handleSubmit = async (values: ILoginCredentials) => {
-    console.log('will handle submit here with values:', values);
+    await dispatch(loginAsync(values));
   };
 
   return (
     <Grid container component='main' sx={{ height: '100vh' }}>
+      {/* Left Section with Logo */}
       <Grid
         item
+        xs={false}
+        sm={4}
+        md={4}
         sx={{
           display: 'flex',
           alignItems: 'center',
           background:
             'linear-gradient(90deg, rgba(2,0,36,1) 0%, #827a9f 55%, rgba(67,164,187,1) 100%)',
         }}
-        xs={false}
-        sm={4}
-        md={4}
       >
-        <Box component={'img'} sx={{ width: '100%', maxHeight: '100vh' }} src={'/logo.png'} />
+        <Box component='img' sx={{ width: '100%', maxHeight: '100vh' }} src='/logo.png' />
       </Grid>
+
+      {/* Right Section with Form */}
       <Grid
         item
-        display={'flex'}
         xs={12}
         sm={8}
         md={8}
-        alignItems={'center'}
-        justifyContent={'center'}
         component={Paper}
         elevation={0}
-        px={theme.spacing(5)}
+        display='flex'
+        alignItems='center'
+        justifyContent='center'
         square
+        px={theme.spacing(5)}
         sx={{
           background: 'linear-gradient(90deg, rgb(99 160 176) 0%, rgba(255, 255, 255, 1) 2%)',
         }}
       >
-        <Grid display={'flex'} flexDirection={'column'} alignItems={'center'}>
+        <Grid display='flex' flexDirection='column' alignItems='center'>
           <Avatar sx={{ m: theme.spacing(1), bgcolor: 'primary.main' }}>
             <LockOutlined />
-          </Avatar>{' '}
+          </Avatar>
           <Typography component='h1' variant='h5'>
             Welcome Again
           </Typography>
           <Formik
             initialValues={{
-              userName: '', // Matches ILoginCredentials
-              password: '', // Matches ILoginCredentials
+              userName: '',
+              password: '',
             }}
             validationSchema={LoginSchema}
             onSubmit={handleSubmit}
