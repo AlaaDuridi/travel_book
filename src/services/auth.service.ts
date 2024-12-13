@@ -6,7 +6,7 @@ import { ILoginCredentials, ILoginResponse } from '../types/models/auth.model.ts
 const INDEX = `${BACKEND_HOST}/api/auth/authenticate`;
 
 class AuthService {
-  static async login(credentials: ILoginCredentials): Promise<ILoginResponse | null> {
+  static async login(credentials: ILoginCredentials): Promise<ILoginResponse> {
     try {
       const response: AxiosResponse<ILoginResponse> = await axios.post(INDEX, credentials);
       console.log('response is', response);
@@ -15,10 +15,9 @@ class AuthService {
         authentication: response.data.authentication,
       };
     } catch (error) {
-      console.error(error);
       AuthService.handleError(error as AxiosError);
+      throw new Error('Login failed');
     }
-    return null;
   }
 
   private static handleError(error: AxiosError): void {

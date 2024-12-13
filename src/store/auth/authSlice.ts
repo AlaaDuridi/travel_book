@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import Cookies from 'js-cookie';
-import { ILoginCredentials } from '../../types/models/auth.model';
+import { ILoginCredentials, ILoginResponse } from '../../types/models/auth.model';
 import { loginUserAPI } from './authAPI';
 import getDecodedJWT, { DecodedJWTUser } from '../../util/getDecodedJWT.ts';
 
@@ -14,9 +14,16 @@ const initialState: AuthState = {
   status: 'idle',
 };
 
-export const loginAsync = createAsyncThunk('auth/login', async (credentials: ILoginCredentials) => {
-  return await loginUserAPI(credentials);
-});
+export const loginAsync = createAsyncThunk<ILoginResponse, ILoginCredentials>(
+  'auth/login',
+  async (credentials: ILoginCredentials, { rejectWithValue }) => {
+    try {
+      return await loginUserAPI(credentials);
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  },
+);
 
 const authSlice = createSlice({
   name: 'auth',
@@ -34,11 +41,24 @@ const authSlice = createSlice({
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.user = getDecodedJWT(); // Decode the JWT after login
+        if (!action.payload) {
+          state.user = null;
+          Cookies.remove('jwt');
+          return;
+        }
+
         Cookies.set('jwt', action.payload.authentication, { secure: true });
+        const decodedUser = getDecodedJWT();
+        state.user = decodedUser ? decodedUser : null;
+
+        if (!decodedUser) {
+          Cookies.remove('jwt'); // Remove invalid token
+        }
       })
-      .addCase(loginAsync.rejected, (state) => {
+      .addCase(loginAsync.rejected, (state, action) => {
         state.status = 'failed';
+        state.user = null; // Ensure user is cleared on login failure
+        console.error('Login failed:', action.payload); // Log error if needed
       });
   },
 });

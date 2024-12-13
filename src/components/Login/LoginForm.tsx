@@ -6,6 +6,7 @@ import { LockOutlined } from '@mui/icons-material';
 import { ILoginCredentials } from '../../types/models/auth.model';
 import { useAppDispatch } from '../../store/hooks';
 import { loginAsync } from '../../store/auth/authSlice';
+import { toast } from 'react-toastify';
 
 const LoginSchema = Yup.object().shape({
   userName: Yup.string().required('Username is required'),
@@ -17,7 +18,16 @@ const LoginForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const handleSubmit = async (values: ILoginCredentials) => {
-    await dispatch(loginAsync(values));
+    const result = await dispatch(loginAsync(values));
+    if (loginAsync.fulfilled.match(result)) {
+      // Redirect to the home/dashboard page or handle successful login
+      console.log('Login successful', result.payload);
+      toast.success('Welcome!');
+    } else if (loginAsync.rejected.match(result)) {
+      // Handle login failure (show error message)
+      console.error('Login failed');
+      toast.error('An error occured!');
+    }
   };
 
   return (
