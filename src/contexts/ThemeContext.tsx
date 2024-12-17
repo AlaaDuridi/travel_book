@@ -1,4 +1,4 @@
-import React, { createContext, useState, useMemo, useEffect } from 'react';
+import React, { createContext, useState, useContext, useMemo, useEffect } from 'react';
 import { ThemeProvider, createTheme, PaletteMode, useMediaQuery } from '@mui/material';
 import { getThemeOptions } from '../theme';
 import Cookies from 'js-cookie';
@@ -35,4 +35,11 @@ export const CustomThemeProvider: React.FC<{ children: React.ReactNode }> = ({ c
       <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </CustomThemeContext.Provider>
   );
+};
+export const useCustomTheme = () => {
+  const context = useContext(CustomThemeContext);
+  if (!context) {
+    throw new Error('useCustomTheme must be used within a CustomThemeProvider');
+  }
+  return context;
 };
