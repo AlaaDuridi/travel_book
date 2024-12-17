@@ -5,21 +5,19 @@ import {
   Typography,
   Box,
   Container,
-  Button,
   useTheme,
   useMediaQuery,
-  Hidden,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { useAppSelector, useAppDispatch } from '../../store/hooks.ts';
 import { signout } from '../../store/auth/authSlice.ts';
 import ThemeToggleMenu from './ThemeToggleMenu.tsx';
 import { INavbarLinkProps } from './Layout.types.ts';
-import Logo from '/logo.png';
 import NavbarList from './NavbarList.tsx';
 import NavbarMenu from './NavbarMenu.tsx';
+import CheckoutBadge from './CheckoutBadge.tsx';
+import Logo from '/logo.png';
 
 const Layout: FC = () => {
   const theme = useTheme();
@@ -32,50 +30,32 @@ const Layout: FC = () => {
     dispatch(signout());
     navigate('/login');
   };
+
   const isUser = user?.userType === 'User';
   const isAdmin = user?.userType === 'Admin';
 
   const LEFT_LINKS: INavbarLinkProps[] = [
     {
-      href: '/',
       children: (
         <>
           <Box component={'img'} sx={{ width: '60px', height: '60px' }} src={Logo} />
-          <Typography mt={-2} ml={1} variant='h6' component='div'>
-            GoGo
+          <Typography mt={-2} ml={1} variant='h6'>
+            TripEase
           </Typography>
         </>
       ),
     },
-    ...(isAdmin
+    ...((isAdmin
       ? [
-          {
-            href: '/admin/manage-hotels',
-            children: <Typography variant={'h6'}>Hotels</Typography>,
-          },
-          {
-            href: '/admin/manage-cities',
-            children: <Typography variant={'h6'}>Cities</Typography>,
-          },
-          {
-            href: '/admin/manage-rooms',
-            children: <Typography variant={'h6'}>Rooms</Typography>,
-          },
+          { href: '/admin/manage-hotels', children: 'Hotels' },
+          { href: '/admin/manage-cities', children: 'Cities' },
+          { href: '/admin/manage-rooms', children: 'Rooms' },
         ]
       : [
-          {
-            scrollTo: 'featured-deals',
-            children: <Typography variant={'h6'}>Featured Deals</Typography>,
-          },
-          {
-            scrollTo: 'recently-visited-hotels',
-            children: <Typography variant={'h6'}>Recently Visited Hotels</Typography>,
-          },
-          {
-            scrollTo: 'trending-destinations',
-            children: <Typography variant={'h6'}>Trending Destinations</Typography>,
-          },
-        ]),
+          { scrollTo: 'featured-deals', children: 'Featured Deals' },
+          { scrollTo: 'recently-visited-hotels', children: 'Recently Visited Hotels' },
+          { scrollTo: 'trending-destinations', children: 'Trending Destinations' },
+        ]) as INavbarLinkProps[]),
   ];
 
   const RIGHT_LINKS: INavbarLinkProps[] = [
@@ -84,16 +64,8 @@ const Layout: FC = () => {
           {
             href: '/user/checkout',
             children: (
-              <Typography
-                variant='h6'
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 1,
-                }}
-              >
-                <ShoppingCartIcon />
+              <Typography variant='h6' sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <CheckoutBadge numberOfBookedRooms={5} />
                 Checkout
               </Typography>
             ),
@@ -104,53 +76,37 @@ const Layout: FC = () => {
       onClick: handleLogout,
       href: '/login',
       children: (
-        <Typography
-          variant='h6'
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 1,
-          }}
-        >
+        <Typography variant='h6' sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <LogoutIcon />
           Logout
         </Typography>
       ),
     },
   ];
+
   return (
-    <>
-      {/* AppBar */}
-      <AppBar position='sticky'>
-        <Container maxWidth='xl'>
-          <Toolbar>
-            {!isMobile && (
-              <>
-                <NavbarList links={LEFT_LINKS} sx={{ justifyContent: 'flex-start' }} />
-                <Box
-                  sx={{
-                    display: { xs: 'none', md: 'flex' },
-                    alignItems: 'center',
-                    gap: 3,
-                  }}
-                >
-                  <ThemeToggleMenu />
-                  <NavbarList links={RIGHT_LINKS} sx={{ justifyContent: 'flex-end' }} />
-                </Box>
-              </>
-            )}
-            {isMobile && (
-              <>
-                <NavbarList links={[LEFT_LINKS[0]]} />
+    <AppBar position='sticky'>
+      <Container maxWidth='xl'>
+        <Toolbar>
+          {!isMobile ? (
+            <>
+              <NavbarList links={LEFT_LINKS} sx={{ justifyContent: 'flex-start' }} />
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, marginLeft: 'auto' }}>
                 <ThemeToggleMenu />
-                <NavbarMenu topLinks={LEFT_LINKS.slice(1)} bottomLinks={RIGHT_LINKS} />
-              </>
-            )}
-          </Toolbar>
-        </Container>
-      </AppBar>
-    </>
+                <NavbarList links={RIGHT_LINKS} sx={{ justifyContent: 'flex-end' }} />
+              </Box>
+            </>
+          ) : (
+            <>
+              <NavbarList links={[LEFT_LINKS[0]]} />
+              <ThemeToggleMenu />
+              <NavbarMenu topLinks={LEFT_LINKS.slice(1)} bottomLinks={RIGHT_LINKS} />
+            </>
+          )}
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 };
+
 export default Layout;

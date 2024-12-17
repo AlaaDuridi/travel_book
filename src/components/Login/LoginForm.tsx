@@ -18,6 +18,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { loginAsync } from '../../store/auth/authSlice';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import Logo from '/logo-title.png';
 
 const LoginSchema = Yup.object().shape({
   userName: Yup.string().required('Username is required'),
@@ -64,7 +65,7 @@ const LoginForm: FC = () => {
           // : 'linear-gradient(90deg, rgba(2,0,36,1) 0%, #827a9f 55%, rgba(67,164,187,1) 100%)',
         }}
       >
-        <Box component='img' sx={{ width: '95%', maxHeight: '100vh' }} src='/logo.png' />
+        <Box component='img' sx={{ width: '95%', maxHeight: '100vh' }} src={Logo} />
       </Grid>
 
       {/* Right Section with Form */}
