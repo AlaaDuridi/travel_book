@@ -65,7 +65,12 @@ export const getThemeOptions = (mode: PaletteMode): ThemeOptions => {
 
   const primaryColor = '#827a9f';
   // const primaryColor = "#eeaf02";
-  const secondaryColor = '#436d93';
+  // const secondaryColor = '#436d93';
+  const secondaryColor = '#9f7a8d'; //dusty pink
+  // const secondaryColor = '#7a9f95'; // muted tea
+  // const secondaryColor = '#7a9f82'; //muted green
+  // const secondaryColor = '#9f827a'; //soft brown
+
   // const secondaryColor = "#05787b";
   const primaryVariants = generateColorVariants(primaryColor) as IColorSettings;
   const secondaryVariants = generateColorVariants(secondaryColor) as IColorSettings;

@@ -14,7 +14,6 @@ const ProtectedRoute = ({ role, children }: { role: string; children: React.Reac
 const RedirectBasedOnRole = () => {
   const { user } = useAppSelector((state) => state.auth);
 
-  console.log('whe to rediect, user type is ', user?.userType);
   if (user?.userType === 'Admin') {
     return <Navigate to='/admin' replace />;
   }
