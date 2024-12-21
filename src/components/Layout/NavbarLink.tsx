@@ -18,17 +18,8 @@ const NavbarLink: FC<INavbarLinkProps> = ({ onClick, href = '/', sx, scrollTo, c
       </MuiLink>
     </Link>
   ) : (
-    <NavLink to={href} style={linkStyle}>
-      <MuiLink
-        component='a'
-        variant='h6'
-        sx={{ ...linkStyle, ...sx }}
-        onClick={onClick}
-        href={href}
-        underline='none'
-      >
-        {children}
-      </MuiLink>
+    <NavLink to={href} style={linkStyle} onClick={onClick}>
+      {children}
     </NavLink>
   );
 };

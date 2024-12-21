@@ -19,8 +19,6 @@ export const CustomThemeProvider: React.FC<{ children: React.ReactNode }> = ({ c
     setMode(newMode);
   };
   const theme = useMemo(() => {
-    console.log('mode is', mode);
-    console.log('system prefer is', systemPrefersDark);
     const resolvedMode: PaletteMode =
       mode === 'system' ? (systemPrefersDark ? 'dark' : 'light') : (mode as PaletteMode);
     return createTheme(getThemeOptions(resolvedMode));

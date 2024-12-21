@@ -1,8 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './auth/authSlice';
+import citiesReducer from './cities/citySlice';
 
 export const rootReducer = {
   auth: authReducer,
+  cities: citiesReducer,
 };
 
 export const store = configureStore({

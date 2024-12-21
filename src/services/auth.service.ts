@@ -9,7 +9,6 @@ class AuthService {
   static async login(credentials: ILoginCredentials): Promise<ILoginResponse> {
     try {
       const response: AxiosResponse<ILoginResponse> = await axios.post(INDEX, credentials);
-      console.log('response is', response);
       return {
         userType: response.data.userType,
         authentication: response.data.authentication,

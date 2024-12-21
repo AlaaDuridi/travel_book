@@ -39,6 +39,7 @@
     "react-scroll": "^1.9.0",
     "react-toastify": "^10.0.6",
     "styled-components": "^6.1.13",
+    "sweetalert2": "^11.15.3",
     "tinycolor2": "^1.6.0",
     "vite-plugin-svgr": "^4.3.0",
     "vite-tsconfig-paths": "^5.1.2",

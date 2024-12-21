@@ -30,6 +30,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     signout: (state) => {
+      console.log('jwt removed');
       state.user = null;
       Cookies.remove('jwt');
     },

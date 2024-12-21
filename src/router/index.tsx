@@ -2,6 +2,7 @@ import { Route, Navigate, Routes } from 'react-router-dom';
 import Login from '../views/login/Login';
 import { useAppSelector } from '../store/hooks';
 import Layout from '../components/Layout/Layout.tsx';
+import Cities from '../views/cities/cities.tsx';
 
 const ProtectedRoute = ({ role, children }: { role: string; children: React.ReactElement }) => {
   const { user } = useAppSelector((state) => state.auth);
@@ -65,7 +66,7 @@ export default function RoutesIndex() {
         }
       >
         <Route index element={<>Admin Home Page</>} />
-        <Route path='manage-cities' element={<>Manage Cities</>} />
+        <Route path='manage-cities' element={<Cities />} />
         <Route path='manage-hotels' element={<>Manage Hotels</>} />
         <Route path='manage-rooms' element={<>Manage Rooms</>} />
       </Route>
