@@ -2,8 +2,13 @@ import axios, { AxiosResponse, CancelToken } from 'axios';
 import { BACKEND_HOST } from '../../constants/common.constants.ts';
 import { IHotel } from '../../types/models/hotel.model.ts';
 import { PaginationResponse } from '../../types/common.types.ts';
+import { IRoom } from '../../types/models/room.model.ts';
 
 const INDEX = `${BACKEND_HOST}/api/hotels`;
+
+interface IGetHotelRoomsResponse {
+  data: Omit<IRoom, 'hotelId'>[];
+}
 
 export const fetchHotels = async (
   searchQuery: string,
@@ -32,4 +37,49 @@ export const updateHotel = async (hotel: IHotel): Promise<IHotel> => {
   const response: AxiosResponse = await axios.put(`${INDEX}/${hotel.id}`, hotel);
   console.log('response of the update hotel is ', response, ' and we return its data');
   return response.data;
+};
+
+export const fetchHotelRooms = async (
+  hotelId: number,
+  checkInDate: string,
+  checkOutDate: string,
+): Promise<IRoom[]> => {
+  const response: AxiosResponse<IGetHotelRoomsResponse> = await axios.get(
+    `${INDEX}/${hotelId}/rooms`,
+    {
+      params: {
+        checkInDate,
+        checkOutDate,
+      },
+    },
+  );
+  return response.data.data.map((room: Omit<IRoom, 'hotelId'>) => {
+    return {
+      ...room,
+      hotelId,
+    } as IRoom;
+  });
+};
+
+interface ICreateHotelRoomPayload {
+  hotelId: number;
+  roomNumber: number;
+  cost: number;
+}
+
+export const createHotelRoom = async (payload: ICreateHotelRoomPayload): Promise<IRoom> => {
+  const response: AxiosResponse<IRoom> = await axios.post(`${INDEX}/${payload.hotelId}/rooms`, {
+    roomNumber: payload.roomNumber,
+    cost: payload.cost,
+  });
+  return {
+    id: response.data.id,
+    roomNumber: response.data.roomNumber,
+    price: response.data.price,
+    hotelId: payload.hotelId,
+  } as IRoom;
+};
+
+export const deleteHotelRoom = async (hotelId: number, roomId: number): Promise<AxiosResponse> => {
+  return await axios.delete(`${INDEX}/${hotelId}/rooms/${roomId}`);
 };
