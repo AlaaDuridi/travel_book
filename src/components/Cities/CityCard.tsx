@@ -3,15 +3,15 @@ import {
   CardContent,
   Stack,
   Tooltip,
-  Button,
   CardActions,
   Typography,
   IconButton,
 } from '@mui/material';
-import { Edit, Visibility, VisibilityOff, Delete } from '@mui/icons-material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import { ICity } from '../../types/models/city.model.ts';
 import { truncateText } from '../../constants/common.constants.ts';
+import GridCardActions from '../GridCardActions.tsx';
 
 interface ICityCardProps {
   city: ICity;
@@ -40,22 +40,7 @@ const CityCard: FC<ICityCardProps> = ({ city, onEdit, onDelete }) => {
           <IconButton>{isViewFullDescription ? <VisibilityOff /> : <Visibility />}</IconButton>
         </Tooltip>
         <Stack direction='row' width={'100%'} gap={2} justifyContent='flex-end' mt={1}>
-          <Button
-            size='small'
-            variant='contained'
-            onClick={() => onEdit(city)}
-            endIcon={<Edit color='action' />}
-          >
-            Edit
-          </Button>
-          <Button
-            size='small'
-            variant='outlined'
-            onClick={() => onDelete(city)}
-            endIcon={<Delete color='error' />}
-          >
-            Delete
-          </Button>
+          <GridCardActions onEdit={() => onEdit(city)} onDelete={() => onDelete(city)} />
         </Stack>
       </CardActions>
     </Card>

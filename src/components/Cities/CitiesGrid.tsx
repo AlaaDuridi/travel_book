@@ -1,13 +1,9 @@
 import React, { useEffect } from 'react';
 import {
   Box,
-  Button,
-  CircularProgress,
   Container,
   Grid,
-  MenuItem,
   Pagination,
-  Select,
   SelectChangeEvent,
   Stack,
   Typography,
@@ -23,18 +19,20 @@ import {
   DEBOUNCE_SEARCH_DELAY,
   INITIAL_PAGE_NUMBER,
   INITIAL_PAGE_SIZE,
-  PAGE_SIZES,
 } from '../../constants/common.constants.ts';
 import useDebounce from '../../hooks/useDebounce.ts';
 import { ICity } from '../../types/models/city.model.ts';
-import { INITIAL_CITY } from '../../constants/cities.constants.ts';
+import { INITIAL_CITY } from '../../constants/city.constants.ts';
 import axios, { CancelTokenSource } from 'axios';
 import { deleteAlert } from '../../util/swal.util.ts';
+import AddButton from '../AddButton.tsx';
+import PaginationLimitSelect from '../PaginationLimitSelect.tsx';
+import GridsSkeleton from './GridsSkeleton.tsx';
 
 let cancelTokenSource: CancelTokenSource | undefined;
 const CitiesGrid: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { cities, loading, error } = useAppSelector((state) => state.cities);
+  const { cities, loading } = useAppSelector((state) => state.cities);
   const [page, setPage] = React.useState<number>(INITIAL_PAGE_NUMBER);
   const [pageSize, setPageSize] = React.useState(INITIAL_PAGE_SIZE);
   const [searchTerm, setSearchTerm] = React.useState<string>('');
@@ -43,6 +41,7 @@ const CitiesGrid: React.FC = () => {
   const [isCityActionDialogOpen, setIsCityActionDialogOpen] = React.useState<boolean>(false);
   const [actionType, setActionType] = React.useState<ACTION_TYPES>(ACTION_TYPES.ADD);
   const [selectedCity, setSelectedCity] = React.useState<ICity>(INITIAL_CITY);
+
   const theme = useTheme();
   const fetchCitiesWithCancelToken = async () => {
     if (cancelTokenSource) {
@@ -54,8 +53,8 @@ const CitiesGrid: React.FC = () => {
       await dispatch(
         fetchCities({
           searchQuery: debouncedSearchTerm,
-          pageSize: String(pageSize),
-          pageNumber: String(page),
+          pageSize: pageSize,
+          pageNumber: page,
           cancelToken: cancelTokenSource.token,
         }),
       );
@@ -113,11 +112,11 @@ const CitiesGrid: React.FC = () => {
 
   return (
     <>
-      <Container maxWidth={'xl'}>
+      <Container sx={{ pt: theme.spacing(4) }} maxWidth={'lg'}>
         <Stack gap={2} m={2}>
           <Stack direction='row' justifyContent='space-between' alignItems='center' spacing={2}>
             <Typography variant='h4' gutterBottom>
-              Manage Cities
+              Cities
             </Typography>
             <Stack direction='row' justifyContent='right' my={2} gap={2}>
               <SearchBar
@@ -125,33 +124,22 @@ const CitiesGrid: React.FC = () => {
                 value={searchTerm}
                 onChange={handleSearchTermChange}
               />
-              <Button
-                variant='contained'
+              <AddButton
+                label={'Add City'}
                 onClick={() => {
                   setIsCityActionDialogOpen(true);
                   setActionType(ACTION_TYPES.ADD);
                   setSelectedCity(INITIAL_CITY);
                 }}
-                fullWidth
-              >
-                Add City
-              </Button>
+              />
             </Stack>
           </Stack>
           <Box display='flex' justifyContent='space-between' alignItems='center' marginBottom={3}>
             <Typography variant='subtitle1'>Showing {cities.length} cities</Typography>
-            <Select value={String(pageSize)} onChange={handlePageSizeChange}>
-              {PAGE_SIZES.map((size) => (
-                <MenuItem key={size} value={size}>
-                  {size} per page
-                </MenuItem>
-              ))}
-            </Select>
+            <PaginationLimitSelect limit={pageSize} onChange={handlePageSizeChange} />
           </Box>
           {loading ? (
-            <Box display='flex' justifyContent='center'>
-              <CircularProgress />
-            </Box>
+            <GridsSkeleton />
           ) : (
             <Grid container spacing={3}>
               {cities.map((city) => (

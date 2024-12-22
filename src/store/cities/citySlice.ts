@@ -18,25 +18,18 @@ const initialState: CityState = {
 // Async thunks
 export const fetchCities = createAsyncThunk(
   'cities/fetchCities',
-  async (
-    {
-      searchQuery,
-      pageSize,
-      pageNumber,
-      cancelToken,
-    }: {
-      searchQuery: string;
-      pageSize: string;
-      pageNumber: string;
-      cancelToken: CancelToken;
-    },
-    { rejectWithValue },
-  ) => {
-    try {
-      return await fetchCitiesAPI(searchQuery, pageSize, pageNumber, cancelToken);
-    } catch (error) {
-      return rejectWithValue('Failed to fetch cities');
-    }
+  async ({
+    searchQuery,
+    pageSize,
+    pageNumber,
+    cancelToken,
+  }: {
+    searchQuery: string;
+    pageSize: number;
+    pageNumber: number;
+    cancelToken?: CancelToken;
+  }) => {
+    return await fetchCitiesAPI(searchQuery, pageSize, pageNumber, cancelToken);
   },
 );
 
