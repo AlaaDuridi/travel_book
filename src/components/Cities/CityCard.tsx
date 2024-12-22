@@ -1,14 +1,14 @@
 import {
   Card,
   CardContent,
-  Stack,
   Tooltip,
-  Button,
   CardActions,
   Typography,
   IconButton,
+  Button,
+  Box,
 } from '@mui/material';
-import { Edit, Visibility, VisibilityOff, Delete } from '@mui/icons-material';
+import { Visibility, VisibilityOff, Edit, Delete } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import { ICity } from '../../types/models/city.model.ts';
 import { truncateText } from '../../constants/common.constants.ts';
@@ -21,44 +21,71 @@ interface ICityCardProps {
 
 const CityCard: FC<ICityCardProps> = ({ city, onEdit, onDelete }) => {
   const [isViewFullDescription, setIsViewFullDescription] = useState<boolean>(false);
+
   return (
-    <Card>
+    <Card
+      sx={{
+        backgroundColor: 'background.paper',
+        borderRadius: 2,
+        boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        height: '100%',
+      }}
+    >
       <CardContent>
-        <Typography variant='h5' component='h2' mb={2}>
+        <Typography
+          variant='h6'
+          component='h2'
+          sx={{ fontWeight: 'bold', color: 'text.primary', mb: 2 }}
+        >
           {city.name}
         </Typography>
-        <Typography variant='body1' color='text.secondary'>
+        <Typography variant='body2' color='text.secondary' sx={{ mb: 2, lineHeight: 1.6 }}>
           {isViewFullDescription ? city.description : truncateText(city.description, 170)}
         </Typography>
-      </CardContent>
-
-      <CardActions>
         <Tooltip
           title={isViewFullDescription ? 'View less' : 'View more'}
           onClick={() => setIsViewFullDescription((prev) => !prev)}
         >
-          <IconButton>{isViewFullDescription ? <VisibilityOff /> : <Visibility />}</IconButton>
+          <IconButton size='small' sx={{ color: 'primary.main' }}>
+            {isViewFullDescription ? <VisibilityOff /> : <Visibility />}
+          </IconButton>
         </Tooltip>
-        <Stack direction='row' width={'100%'} gap={2} justifyContent='flex-end' mt={1}>
+      </CardContent>
+
+      <CardActions
+        sx={{
+          padding: 2,
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <Box>
           <Button
+            variant='outlined'
             size='small'
-            variant='contained'
+            color='primary'
+            startIcon={<Edit />}
             onClick={() => onEdit(city)}
-            endIcon={<Edit color='action' />}
           >
             Edit
           </Button>
-          <Button
-            size='small'
-            variant='outlined'
-            onClick={() => onDelete(city)}
-            endIcon={<Delete color='error' />}
-          >
-            Delete
-          </Button>
-        </Stack>
+        </Box>
+        <Button
+          variant='outlined'
+          size='small'
+          color='error'
+          startIcon={<Delete />}
+          onClick={() => onDelete(city)}
+        >
+          Delete
+        </Button>
       </CardActions>
     </Card>
   );
 };
+
 export default CityCard;
