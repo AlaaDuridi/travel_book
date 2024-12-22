@@ -1,81 +1,127 @@
 import { FC, useState } from 'react';
 import { IHotel } from '../../types/models/hotel.model.ts';
-import { Card, CardActions, Rating, Stack, Typography, useTheme } from '@mui/material';
+import {
+  Card,
+  CardActions,
+  CardContent,
+  Rating,
+  Stack,
+  Typography,
+  useTheme,
+  Box,
+  Button,
+} from '@mui/material';
 import Map from '../Map.tsx';
-import GridCardActions from '../GridCardActions.tsx';
 import HotelActionDialog from './HotelActionDialog.tsx';
 import { ACTION_TYPES } from '../../constants/common.constants.ts';
-import { deleteHotelAsync } from '../../store/hotels/hotelSlice.ts';
-import { deleteAlert } from '../../util/swal.util.ts';
-import { useAppDispatch } from '../../store/hooks.ts';
 
 interface IHotelCardProps {
   hotel: IHotel;
-  selectedCityId?: number;
 }
 
-const HotelCard: FC<IHotelCardProps> = ({ hotel, selectedCityId }) => {
+const HotelCard: FC<IHotelCardProps> = ({ hotel }) => {
   const theme = useTheme();
   const [isEditHotelDialogOpen, setIsEditHotelDialogOpen] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
 
   const handleOpenUpdateDialog = () => {
     setIsEditHotelDialogOpen(true);
   };
-  const handleOpenDeleteAlert = async () => {
-    await deleteAlert(
-      theme,
-      async () => {
-        const resultAction = await dispatch(
-          deleteHotelAsync({ hotelId: hotel.id, cityId: selectedCityId }),
-        );
-        if (deleteHotelAsync.fulfilled.match(resultAction)) {
-          console.log('City deleted successfully:', hotel.id);
-        } else if (deleteHotelAsync.rejected.match(resultAction)) {
-          const errorMessage = resultAction.payload as string;
-          throw new Error(errorMessage);
-        }
-      },
-      'Are you sure you want to delete this city?',
-      `The city "${hotel.name}" will be permanently deleted.`,
-    );
-  };
+
   return (
     <>
-      <Card sx={{ p: theme.spacing(2) }}>
-        <Stack direction='row' justifyContent='space-between' gap={3}>
-          <Stack gap={2}>
-            <Typography variant='h5' component='h3'>
+      <Card
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          height: '100%',
+          backgroundColor: theme.palette.background.paper,
+          borderRadius: theme.spacing(2),
+          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+        }}
+      >
+        <CardContent>
+          <Stack spacing={2}>
+            <Typography
+              variant='h6'
+              component='h2'
+              sx={{
+                fontWeight: 'bold',
+                textTransform: 'capitalize',
+                color: theme.palette.text.primary,
+              }}
+            >
               {hotel.name}
             </Typography>
-            <Typography sx={{ display: 'flex', alignItems: 'center' }} gap={2}>
-              <Typography variant='body2' component='span'>
+
+            <Box>
+              <Typography
+                variant='body2'
+                component='span'
+                sx={{
+                  fontWeight: 'bold',
+                  color: theme.palette.text.secondary,
+                }}
+              >
                 Type:
+              </Typography>{' '}
+              <Typography
+                variant='body2'
+                component='span'
+                sx={{ color: theme.palette.text.primary }}
+              >
+                {hotel.hotelType}
               </Typography>
-              {hotel.hotelType}
-            </Typography>
-            <Rating value={hotel.starRating} readOnly />
-            <Typography sx={{ display: 'flex', alignItems: 'center' }} gap={2}>
-              <Typography variant='body2' component='span'>
+            </Box>
+
+            <Rating value={hotel.starRating} readOnly size='small' />
+
+            <Box>
+              <Typography
+                variant='body2'
+                component='span'
+                sx={{
+                  fontWeight: 'bold',
+                  color: theme.palette.text.secondary,
+                }}
+              >
                 Description:
+              </Typography>{' '}
+              <Typography
+                variant='body2'
+                component='span'
+                sx={{ color: theme.palette.text.primary }}
+              >
+                {hotel.description}
               </Typography>
-              {hotel.description}
-            </Typography>
+            </Box>
+
+            {hotel.latitude && hotel.longitude ? (
+              <Box
+                sx={{
+                  mt: theme.spacing(2),
+                  borderRadius: theme.spacing(1),
+                  overflow: 'hidden',
+                  boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+                }}
+              >
+                <Map latitude={hotel.latitude} longitude={hotel.longitude} />
+              </Box>
+            ) : (
+              <Typography variant='body2' color='textSecondary'>
+                Location not available
+              </Typography>
+            )}
           </Stack>
-        </Stack>
-        <CardActions>
-          <GridCardActions onEdit={handleOpenUpdateDialog} onDelete={handleOpenDeleteAlert} />
+        </CardContent>
+
+        <CardActions sx={{ justifyContent: 'space-between', px: theme.spacing(2) }}>
+          <Button size='small' variant='contained' color='primary' onClick={handleOpenUpdateDialog}>
+            Edit
+          </Button>
         </CardActions>
-        {hotel.latitude && hotel.longitude ? (
-          <>
-            <Map latitude={hotel.latitude} longitude={hotel.longitude} />
-          </>
-        ) : (
-          <Typography variant='body2' color='textSecondary'>
-            Location not available
-          </Typography>
-        )}
       </Card>
+
       {isEditHotelDialogOpen && (
         <HotelActionDialog
           open={isEditHotelDialogOpen}

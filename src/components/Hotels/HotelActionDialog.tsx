@@ -6,6 +6,11 @@ import {
   DialogTitle,
   Stack,
   TextField,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Typography,
 } from '@mui/material';
 import { Form, Formik } from 'formik';
 import { FC } from 'react';
@@ -13,48 +18,73 @@ import { IHotel } from '../../types/models/hotel.model.ts';
 import { ACTION_TYPES } from '../../constants/common.constants.ts';
 import * as Yup from 'yup';
 import { IHotelActionDialogProps } from './Hotels.types.ts';
-import { addCity, updateCity } from '../../store/cities/citySlice.ts';
 import { toast } from 'react-toastify';
-import { useAppDispatch } from '../../store/hooks.ts';
-import { createHotelAsync } from '../../store/hotels/hotelSlice.ts';
+import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
+import { createHotelAsync, updateHotelAsync } from '../../store/hotels/hotelSlice.ts';
 
 const validationSchema = Yup.object({
-  name: Yup.string().required('Hotel name is required').max(100, 'Maximum 100 characters allowed'),
-  description: Yup.string().max(500, 'Maximum 500 characters allowed'),
+  name: Yup.string().required('Please specify the hotel name'),
+  description: Yup.string().required('Please add the hotel description'),
+  hotelType: Yup.string().required('Please enter the hotel type'),
+  starRating: Yup.number()
+    .min(0, 'Rating must be between 0 and 5')
+    .max(5, 'Rating must be between 0 and 5')
+    .required('Please specify the hotel Rating'),
+  latitude: Yup.number()
+    .min(-90, 'Latitude must be between -90 and 90')
+    .max(90, 'Latitude must be between -90 and 90')
+    .required('Latitude is required'),
+  longitude: Yup.number()
+    .min(-180, 'Longitude must be between -180 and 180')
+    .max(180, 'Longitude is required'),
+  cityId: Yup.number()
+    .nullable()
+    .when([], {
+      is: (_: unknown, context: { isAddAction: boolean }) => context?.isAddAction,
+      then: (schema) => schema.required('Please select a city'),
+      otherwise: (schema) => schema.nullable(),
+    }),
 });
+
 const HotelActionDialog: FC<IHotelActionDialogProps> = ({ open, onClose, hotel, actionType }) => {
   const isAddAction = actionType === ACTION_TYPES.ADD;
   const dispatch = useAppDispatch();
+  const { cities } = useAppSelector((state) => state.cities);
 
   const handleCreateHotelSubmit = async (
-    values: any,
+    values: IHotel & { cityId?: number },
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
   ) => {
-    console.log('will submit addition an hotel or update an hotel values', values);
-    // try {
-    //     if (isAddAction) {
-    //         await dispatch(createHotelAsync(hotel)).unwrap();
-    //         toast.success('City added successfully');
-    //     } else {
-    //         await dispatch(updateCity(values)).unwrap();
-    //         toast.success('City updated successfully');
-    //     }
-    //     onClose();
-    // } catch (error) {
-    //     toast.error('Failed to submit the city.');
-    //     console.error(error);
-    // } finally {
-    //     setSubmitting(false);
-    // }
+    console.log('Submit values:', values);
+    try {
+      if (isAddAction) {
+        await dispatch(createHotelAsync({ cityId: values.cityId!, hotel: values })).unwrap();
+        toast.success('Hotel added successfully');
+      } else {
+        await dispatch(updateHotelAsync(values)).unwrap();
+        toast.success('Hotel updated successfully');
+      }
+      onClose();
+    } catch (error) {
+      toast.error('Failed to submit the hotel.');
+      console.error(error);
+    } finally {
+      setSubmitting(false);
+    }
   };
+
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} fullWidth>
       <DialogTitle>{isAddAction ? 'Add Hotel' : 'Edit Hotel'}</DialogTitle>
       <DialogContent dividers>
         <Formik
-          initialValues={hotel}
+          initialValues={{ ...hotel, cityId: isAddAction ? '' : undefined }}
           validationSchema={validationSchema}
           onSubmit={handleCreateHotelSubmit}
+          enableReinitialize
+          validateOnBlur
+          validateOnChange
+          context={{ isAddAction }}
         >
           {({ values, handleChange, handleBlur, touched, errors, isSubmitting }) => (
             <Form>
@@ -62,7 +92,7 @@ const HotelActionDialog: FC<IHotelActionDialogProps> = ({ open, onClose, hotel, 
                 {/* Name Field */}
                 <TextField
                   name='name'
-                  label='City Name'
+                  label='Hotel Name'
                   fullWidth
                   value={values.name}
                   onChange={handleChange}
@@ -71,10 +101,61 @@ const HotelActionDialog: FC<IHotelActionDialogProps> = ({ open, onClose, hotel, 
                   helperText={touched.name && errors.name}
                 />
 
+                {/* Hotel Type Field */}
+                <TextField
+                  name='hotelType'
+                  label='Hotel Type'
+                  fullWidth
+                  value={values.hotelType}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.hotelType && Boolean(errors.hotelType)}
+                  helperText={touched.hotelType && errors.hotelType}
+                />
+
+                {/* Latitude Field */}
+                <TextField
+                  name='latitude'
+                  label='Latitude'
+                  fullWidth
+                  value={values.latitude}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  type='number'
+                  error={touched.latitude && Boolean(errors.latitude)}
+                  helperText={touched.latitude && errors.latitude}
+                />
+
+                {/* Longitude Field */}
+                <TextField
+                  name='longitude'
+                  label='Longitude'
+                  fullWidth
+                  value={values.longitude}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  type='number'
+                  error={touched.longitude && Boolean(errors.longitude)}
+                  helperText={touched.longitude && errors.longitude}
+                />
+
+                {/* Star Rating Field */}
+                <TextField
+                  name='starRating'
+                  label='Star Rating'
+                  fullWidth
+                  value={values.starRating}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  type='number'
+                  error={touched.starRating && Boolean(errors.starRating)}
+                  helperText={touched.starRating && errors.starRating}
+                />
+
                 {/* Description Field */}
                 <TextField
                   name='description'
-                  label='City Description'
+                  label='Hotel Description'
                   fullWidth
                   multiline
                   minRows={3}
@@ -84,6 +165,34 @@ const HotelActionDialog: FC<IHotelActionDialogProps> = ({ open, onClose, hotel, 
                   error={touched.description && Boolean(errors.description)}
                   helperText={touched.description && errors.description}
                 />
+
+                {/* City Selection Field (Only for Add Action) */}
+                {isAddAction && (
+                  <FormControl fullWidth error={touched.cityId && Boolean(errors.cityId)}>
+                    <InputLabel id='city-select-label'>City</InputLabel>
+                    <Select
+                      name='cityId'
+                      labelId='city-select-label'
+                      value={values.cityId || ''}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                    >
+                      <MenuItem value=''>
+                        <em>Select a City</em>
+                      </MenuItem>
+                      {cities.map((city) => (
+                        <MenuItem key={city.id} value={city.id}>
+                          {city.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    {touched.cityId && errors.cityId && (
+                      <Typography color='error' variant='caption'>
+                        {errors.cityId}
+                      </Typography>
+                    )}
+                  </FormControl>
+                )}
               </Stack>
 
               <DialogActions>

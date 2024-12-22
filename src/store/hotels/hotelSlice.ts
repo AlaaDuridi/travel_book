@@ -11,6 +11,7 @@ interface IHotelState {
   totalItems: number;
   totalPages: number;
   status: STATUS;
+
   selectedCityId?: number;
 }
 

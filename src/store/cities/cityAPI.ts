@@ -48,7 +48,15 @@ export const createHotelAPI = async (
   hotel: Omit<IHotel, 'id'>,
   cityId: number,
 ): Promise<IHotel> => {
-  const response = await axios.post(`${INDEX}/${cityId}/hotels`, hotel);
+  const payload: Omit<IHotel, 'id'> = {
+    name: hotel.name,
+    description: hotel.description,
+    hotelType: hotel.hotelType,
+    latitude: hotel.latitude,
+    longitude: hotel.longitude,
+    starRating: hotel.starRating,
+  };
+  const response = await axios.post(`${INDEX}/${cityId}/hotels`, payload);
   console.log('response of the create hotel is ', response, ' and we return its data');
   return response.data;
 };

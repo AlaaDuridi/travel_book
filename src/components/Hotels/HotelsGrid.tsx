@@ -18,7 +18,6 @@ import {
   DEBOUNCE_SEARCH_DELAY,
   INITIAL_PAGE_NUMBER,
   INITIAL_PAGE_SIZE,
-  STATUS,
 } from '../../constants/common.constants.ts';
 import useDebounce from '../../hooks/useDebounce.ts';
 import {
@@ -38,13 +37,13 @@ import CitiesFilterSelect from './CitiesFilterSelect.tsx';
 const HotelsGrid: FC = () => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
-  const { hotels, selectedCityId, totalItems, status } = useAppSelector((state) => state.hotels);
+  const { hotels, selectedCityId, totalItems } = useAppSelector((state) => state.hotels);
   const { cities } = useAppSelector((state) => state.cities);
   const [page, setPage] = useState<number>(INITIAL_PAGE_NUMBER);
   const [rowsPerPage, setRowsPerPage] = useState<number>(INITIAL_PAGE_SIZE);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const debouncedSearchTerm = useDebounce(searchTerm, DEBOUNCE_SEARCH_DELAY);
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isCreatHotelDialogOpen, setIsCreateHotelDialogOpen] = useState<boolean>(false);
 
   useEffect(() => {
@@ -53,27 +52,32 @@ const HotelsGrid: FC = () => {
         cancelTokenSource.cancel('Cancelling previous request');
       }
       cancelTokenSource = axios.CancelToken.source();
-      if (selectedCityId) {
-        dispatch(
-          fetchHotelsByCityAsync({
-            cityId: selectedCityId,
-            searchQuery: debouncedSearchTerm,
-            pageSize: rowsPerPage,
-            pageNumber: page,
-            cancelToken: cancelTokenSource.token,
-          }),
-        );
-        console.log(status);
-      } else {
-        await dispatch(
-          fetchHotelsAsync({
-            searchQuery: debouncedSearchTerm,
-            pageSize: rowsPerPage,
-            pageNumber: page,
-            cancelToken: cancelTokenSource.token,
-          }),
-        );
-        console.log(status);
+      try {
+        setIsLoading(true);
+        if (selectedCityId) {
+          await dispatch(
+            fetchHotelsByCityAsync({
+              cityId: selectedCityId,
+              searchQuery: debouncedSearchTerm,
+              pageSize: rowsPerPage,
+              pageNumber: page,
+              cancelToken: cancelTokenSource.token,
+            }),
+          ).unwrap();
+        } else {
+          await dispatch(
+            fetchHotelsAsync({
+              searchQuery: debouncedSearchTerm,
+              pageSize: rowsPerPage,
+              pageNumber: page,
+              cancelToken: cancelTokenSource.token,
+            }),
+          ).unwrap();
+        }
+      } catch (error) {
+        console.error('Failed to fetch hotels:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
     void fetchHotels();
@@ -89,6 +93,26 @@ const HotelsGrid: FC = () => {
     dispatch(setSelectedCityId(cityId));
     setPage(INITIAL_PAGE_NUMBER);
   };
+
+  const renderHotels = () => {
+    if (isLoading) {
+      return <GridsSkeleton />;
+    }
+
+    if (!hotels.length) {
+      return (
+        <Typography color='textSecondary' textAlign='center' mt={2}>
+          No hotels found.
+        </Typography>
+      );
+    }
+    return hotels.map((hotel) => (
+      <Grid item xs={12} sm={6} key={hotel.id}>
+        <HotelCard hotel={hotel} />
+      </Grid>
+    ));
+  };
+
   return (
     <Container sx={{ pt: theme.spacing(4) }} maxWidth={'lg'}>
       <Stack gap={2} m={2}>
@@ -124,19 +148,10 @@ const HotelsGrid: FC = () => {
           </Stack>
         </Stack>
 
-        <Grid container spacing={2}>
-          {status === STATUS.LOADING && <GridsSkeleton />}
-          {status === STATUS.IDLE && (
-            <>
-              {hotels?.map((hotel) => (
-                <Grid item xs={12} md={4} sm={6} key={hotel.id}>
-                  <HotelCard hotel={hotel} selectedCityId={selectedCityId} />
-                </Grid>
-              ))}
-            </>
-          )}
-          {status === STATUS.FAILED && <h4>Failed to load city hotels</h4>}
+        <Grid container spacing={4}>
+          {renderHotels()}
         </Grid>
+
         <Stack direction='row' justifyContent='center' mt={3}>
           <Pagination
             count={Math.ceil(totalItems / rowsPerPage)}
@@ -157,4 +172,5 @@ const HotelsGrid: FC = () => {
     </Container>
   );
 };
+
 export default HotelsGrid;
