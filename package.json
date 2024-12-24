@@ -27,6 +27,7 @@
     "@mui/styled-engine-sc": "^6.1.7",
     "@reduxjs/toolkit": "^2.4.0",
     "axios": "^1.7.8",
+    "dayjs": "^1.11.13",
     "formik": "^2.4.6",
     "husky": "^9.1.7",
     "js-cookie": "^3.0.5",
