@@ -65,7 +65,7 @@ const CityCard: FC<ICityCardProps> = ({ city, onEdit, onDelete }) => {
       >
         <Box>
           <Button
-            variant='outlined'
+            variant='contained'
             size='small'
             color='primary'
             startIcon={<Edit />}

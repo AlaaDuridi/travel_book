@@ -14,6 +14,7 @@ import {
 import Map from '../Map.tsx';
 import HotelActionDialog from './HotelActionDialog.tsx';
 import { ACTION_TYPES } from '../../constants/common.constants.ts';
+import { Edit } from '@mui/icons-material';
 
 interface IHotelCardProps {
   hotel: IHotel;
@@ -86,7 +87,7 @@ const HotelCard: FC<IHotelCardProps> = ({ hotel }) => {
                 }}
               >
                 Description:
-              </Typography>{' '}
+              </Typography>
               <Typography
                 variant='body2'
                 component='span'
@@ -95,28 +96,27 @@ const HotelCard: FC<IHotelCardProps> = ({ hotel }) => {
                 {hotel.description}
               </Typography>
             </Box>
-
-            {hotel.latitude && hotel.longitude ? (
-              <Box
-                sx={{
-                  mt: theme.spacing(2),
-                  borderRadius: theme.spacing(1),
-                  overflow: 'hidden',
-                  boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
-                }}
-              >
-                <Map latitude={hotel.latitude} longitude={hotel.longitude} />
-              </Box>
-            ) : (
-              <Typography variant='body2' color='textSecondary'>
-                Location not available
-              </Typography>
-            )}
+            <Box
+              sx={{
+                mt: theme.spacing(2),
+                borderRadius: theme.spacing(1),
+                overflow: 'hidden',
+                boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.1)',
+              }}
+            >
+              <Map latitude={hotel.latitude} longitude={hotel.longitude} />
+            </Box>
           </Stack>
         </CardContent>
 
         <CardActions sx={{ justifyContent: 'space-between', px: theme.spacing(2) }}>
-          <Button size='small' variant='contained' color='primary' onClick={handleOpenUpdateDialog}>
+          <Button
+            startIcon={<Edit />}
+            size='small'
+            variant='contained'
+            color='primary'
+            onClick={handleOpenUpdateDialog}
+          >
             Edit
           </Button>
         </CardActions>
