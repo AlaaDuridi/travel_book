@@ -8,6 +8,7 @@ interface ICitiesFilterSelectProps {
   handleItemChange: (event: SelectChangeEvent<number>) => void;
   items: ICity[] | IHotel[];
   firstItemLabel: string;
+  disableAll?: boolean;
 }
 
 const CitiesFilterSelect: FC<ICitiesFilterSelectProps> = ({
@@ -15,6 +16,7 @@ const CitiesFilterSelect: FC<ICitiesFilterSelectProps> = ({
   handleItemChange,
   items,
   firstItemLabel,
+  disableAll,
 }) => {
   return (
     <Select
@@ -23,7 +25,7 @@ const CitiesFilterSelect: FC<ICitiesFilterSelectProps> = ({
       displayEmpty
       inputProps={{ 'aria-label': 'Select city' }}
     >
-      <MenuItem value=''>
+      <MenuItem value='' disabled={disableAll}>
         <em>{firstItemLabel}</em>
       </MenuItem>
       {items.map((item) => (

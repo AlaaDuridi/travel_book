@@ -49,19 +49,22 @@ const RoomActionDialog: FC<IRoomActionDialogProps> = ({ open, onClose, room, act
     values: Pick<IRoom, 'hotelId' | 'roomNumber' | 'price'>,
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
   ) => {
-    console.log('Will submit values', values);
     try {
       if (isAddAction) {
-        await dispatch(
+        const resultAction = await dispatch(
           createRoomAsync({
             hotelId: values.hotelId,
             roomNumber: values.roomNumber,
             cost: values.price,
           }),
         );
-        toast.success('Room added successfully');
+        if (createRoomAsync.fulfilled.match(resultAction)) {
+          toast.success('Room added successfully');
+        } else {
+          throw new Error('An Error occurred while creating new room');
+        }
       } else {
-        await dispatch(
+        const resultAction = await dispatch(
           updateRoomAsync({
             ...room,
             hotelId: values.hotelId,
@@ -69,12 +72,15 @@ const RoomActionDialog: FC<IRoomActionDialogProps> = ({ open, onClose, room, act
             price: values.price,
           }),
         );
-        toast.success('Room updated successfully');
+        if (updateRoomAsync.fulfilled.match(resultAction)) {
+          toast.success('Room updated successfully');
+        } else {
+          throw new Error('An error occurred while updating room');
+        }
       }
       onClose();
     } catch (error) {
-      toast.error('Error saving room');
-      console.error('Error saving room:', error);
+      toast.error((error as Error).message);
     } finally {
       setSubmitting(false);
     }
