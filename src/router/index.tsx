@@ -6,6 +6,7 @@ import Layout from '../components/Layout/Layout.tsx';
 import Cities from '../views/cities/cities.tsx';
 import ErrorBoundary from '../components/ErrorBoundary.tsx';
 import Loader from '../components/Loader.tsx';
+import Rooms from '../views/rooms/Rooms.tsx';
 
 const Hotels = lazy(() => import('../views/hotels/hotels.tsx'));
 
@@ -75,7 +76,7 @@ export default function RoutesIndex() {
             <Route index element={<>Admin Home Page</>} />
             <Route path='manage-cities' element={<Cities />} />
             <Route path='manage-hotels' element={<Hotels />} />
-            <Route path='manage-rooms' element={<>Manage Rooms</>} />
+            <Route path='manage-rooms' element={<Rooms />} />
           </Route>
 
           {/* User Routes */}
