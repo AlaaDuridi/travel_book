@@ -33,7 +33,7 @@ export const fetchHotelsAsync = createAsyncThunk(
     searchQuery: string;
     pageSize: number;
     pageNumber: number;
-    cancelToken: CancelToken;
+    cancelToken?: CancelToken;
   }) => {
     const { data, total, totalPages } = await fetchHotels(
       searchQuery,

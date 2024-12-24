@@ -14,7 +14,7 @@ export const fetchHotels = async (
   searchQuery: string,
   pageSize: number,
   pageNumber: number,
-  cancelToken: CancelToken,
+  cancelToken?: CancelToken,
 ): Promise<{ data: IHotel[]; total: number; totalPages: number }> => {
   const response = await axios.get(INDEX, {
     params: {
