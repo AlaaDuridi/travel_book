@@ -1,31 +1,34 @@
 import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { ICity } from '../../types/models/city.model.ts';
 import { FC } from 'react';
+import { IHotel } from '../../types/models/hotel.model.ts';
 
 interface ICitiesFilterSelectProps {
-  selectedCityId: number | undefined;
-  handleCityChange: (event: SelectChangeEvent<number>) => void;
-  cities: ICity[];
+  selectedItemId: number | undefined;
+  handleItemChange: (event: SelectChangeEvent<number>) => void;
+  items: ICity[] | IHotel[];
+  firstItemLabel: string;
 }
 
 const CitiesFilterSelect: FC<ICitiesFilterSelectProps> = ({
-  selectedCityId,
-  handleCityChange,
-  cities,
+  selectedItemId,
+  handleItemChange,
+  items,
+  firstItemLabel,
 }) => {
   return (
     <Select
-      value={selectedCityId || ''}
-      onChange={handleCityChange}
+      value={selectedItemId || ''}
+      onChange={handleItemChange}
       displayEmpty
       inputProps={{ 'aria-label': 'Select city' }}
     >
       <MenuItem value=''>
-        <em>All Cities</em>
+        <em>{firstItemLabel}</em>
       </MenuItem>
-      {cities.map((city) => (
-        <MenuItem key={city.id} value={city.id}>
-          {city.name}
+      {items.map((item) => (
+        <MenuItem key={item.id} value={item.id}>
+          {item.name}
         </MenuItem>
       ))}
     </Select>

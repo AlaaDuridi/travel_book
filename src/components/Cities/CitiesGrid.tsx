@@ -27,7 +27,7 @@ import axios, { CancelTokenSource } from 'axios';
 import { deleteAlert } from '../../util/swal.util.ts';
 import AddButton from '../AddButton.tsx';
 import PaginationLimitSelect from '../PaginationLimitSelect.tsx';
-import GridsSkeleton from './GridsSkeleton.tsx';
+import GridsSkeleton from '../Skeleton/GridsSkeleton.tsx';
 
 let cancelTokenSource: CancelTokenSource | undefined;
 const CitiesGrid: React.FC = () => {

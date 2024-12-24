@@ -29,10 +29,10 @@ import SearchBar from '../SearchBar.tsx';
 import AddButton from '../AddButton.tsx';
 import PaginationLimitSelect from '../PaginationLimitSelect.tsx';
 import HotelCard from './HotelCard.tsx';
-import GridsSkeleton from '../Cities/GridsSkeleton.tsx';
+import GridsSkeleton from '../Skeleton/GridsSkeleton.tsx';
 import HotelActionDialog from './HotelActionDialog.tsx';
 import { INITIAL_HOTEL } from '../../constants/hotel.constants.ts';
-import CitiesFilterSelect from './CitiesFilterSelect.tsx';
+import CitiesFilterSelect from '../ItemsSelect/CitiesFilterSelect.tsx';
 
 const HotelsGrid: FC = () => {
   const theme = useTheme();
@@ -89,7 +89,7 @@ const HotelsGrid: FC = () => {
   };
 
   const handleCityChange = (event: SelectChangeEvent<number>) => {
-    const cityId = event.target.value as number;
+    const cityId = Number(event.target.value);
     dispatch(setSelectedCityId(cityId));
     setPage(INITIAL_PAGE_NUMBER);
   };
@@ -128,9 +128,10 @@ const HotelsGrid: FC = () => {
             />
 
             <CitiesFilterSelect
-              selectedCityId={selectedCityId}
-              cities={cities}
-              handleCityChange={handleCityChange}
+              selectedItemId={selectedCityId}
+              items={cities}
+              handleItemChange={handleCityChange}
+              firstItemLabel={'All Cities'}
             />
             <AddButton
               label='Add Hotel'
