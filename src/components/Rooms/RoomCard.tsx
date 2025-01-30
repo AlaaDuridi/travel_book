@@ -15,35 +15,13 @@ import {
   useTheme,
 } from '@mui/material';
 
-import {
-  ChildCare,
-  PeopleAlt,
-  Wifi,
-  Tv,
-  AcUnit,
-  Spa,
-  LocalBar,
-  BeachAccess,
-  KingBed,
-  ViewComfy,
-  RoomService,
-  AttachMoney,
-  SingleBed,
-  Hotel,
-  FreeBreakfast,
-  Kitchen,
-  SportsHandball,
-  BusinessCenter,
-  MeetingRoom,
-  Delete,
-  Edit,
-} from '@mui/icons-material';
-import { AMENITY } from '../../constants/room.constants.ts';
+import { ChildCare, PeopleAlt, Delete, Edit } from '@mui/icons-material';
 import RoomActionDialog from './RoomActionDialog.tsx';
 import { ACTION_TYPES } from '../../constants/common.constants.ts';
 import { deleteAlert } from '../../util/swal.util.ts';
 import { deleteRoomAsync } from '../../store/rooms/roomSlice.ts';
 import { useAppDispatch } from '../../store/hooks.ts';
+import Amenity from './Amenity.tsx';
 
 interface IRoomCardProps {
   room: IRoom;
@@ -53,47 +31,6 @@ const RoomCard: FC<IRoomCardProps> = ({ room }) => {
   const theme = useTheme();
   const [isEditRoomDialogOpen, setIsEditRoomDialogOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-
-  const amenityIcon = (amenity: AMENITY) => {
-    switch (amenity) {
-      case AMENITY.FREE_WIFI:
-        return <Wifi />;
-      case AMENITY.TV:
-        return <Tv />;
-      case AMENITY.AIR_CONDITIONING:
-        return <AcUnit />;
-      case AMENITY.JACUZZI:
-        return <Spa />;
-      case AMENITY.MINI_BAR:
-        return <LocalBar />;
-      case AMENITY.OCEAN_VIEW:
-        return <BeachAccess />;
-      case AMENITY.KING_SIZE_BED:
-        return <KingBed />;
-      case AMENITY.CITY_VIEW:
-        return <ViewComfy />;
-      case AMENITY.ROOM_SERVICE:
-        return <RoomService />;
-      case AMENITY.BUDGET_FRIENDLY:
-        return <AttachMoney />;
-      case AMENITY.SINGLE_BED:
-        return <SingleBed />;
-      case AMENITY.ADJOINING_ROOMS:
-        return <Hotel />;
-      case AMENITY.COMPLIMENTARY_BREAKFAST:
-        return <FreeBreakfast />;
-      case AMENITY.KITCHENETTE:
-        return <Kitchen />;
-      case AMENITY.PLAY_AREA:
-        return <SportsHandball />;
-      case AMENITY.BUSINESS_CENTER_ACCESS:
-        return <BusinessCenter />;
-      case AMENITY.MEETING_ROOM:
-        return <MeetingRoom />;
-      default:
-        return undefined;
-    }
-  };
 
   const handleOpenDeleteDialog = async () => {
     await deleteAlert(
@@ -168,19 +105,7 @@ const RoomCard: FC<IRoomCardProps> = ({ room }) => {
         </Typography>
         <Grid container spacing={2}>
           {room.roomAmenities.map((amenity, index) => (
-            <Grid item xs={12} sm={6} key={index}>
-              <Tooltip title={`${amenity.name}: ${amenity.description}`} arrow>
-                <Chip
-                  icon={amenityIcon(
-                    AMENITY[amenity.name.toUpperCase().replace(/ /g, '_') as keyof typeof AMENITY],
-                  )}
-                  label={`${amenity.name}`}
-                  variant='filled'
-                  color='secondary'
-                  sx={{ width: '100%' }}
-                />
-              </Tooltip>
-            </Grid>
+            <Amenity amenity={amenity} index={index} />
           ))}
         </Grid>
       </CardContent>

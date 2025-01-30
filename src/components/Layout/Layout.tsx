@@ -101,26 +101,36 @@ const Layout: FC = () => {
       <GlobalStyles
         styles={{
           body: {
-            background:
-              theme.palette.mode === 'light'
-                ? `linear-gradient(180deg, ${theme.palette.primary.light},#fff)`
-                : `linear-gradient(${theme.palette.background.default},${theme.palette.primary.light})`,
+            background: theme.palette.background.default,
             color: theme.palette.text.primary,
             margin: 0,
             padding: 0,
           },
         }}
       />
-      <AppBar position='sticky'>
+      <AppBar position='sticky' sx={{ background: theme.palette.primary.main }}>
         <Container maxWidth='xl'>
           <Toolbar>
             {!isMobile ? (
               <>
-                <NavbarList links={LEFT_LINKS} sx={{ justifyContent: 'flex-start' }} />
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 3, marginLeft: 'auto' }}>
-                  <ThemeToggleMenu />
-                  <NavbarList links={RIGHT_LINKS} sx={{ justifyContent: 'flex-end' }} />
-                </Box>
+                <Grid container item xs={10}>
+                  <NavbarList links={LEFT_LINKS} sx={{ justifyContent: 'flex-start' }} />
+                </Grid>
+                <Grid
+                  container
+                  item
+                  xs={3}
+                  justifyContent={'center'}
+                  alignItems={'center'}
+                  direction={'row'}
+                >
+                  <Grid item justifyContent={'center'}>
+                    <ThemeToggleMenu />
+                  </Grid>
+                  <Grid item justifyContent={'center'}>
+                    <NavbarList links={RIGHT_LINKS} sx={{ justifyContent: 'center' }} />
+                  </Grid>
+                </Grid>
               </>
             ) : (
               <>
@@ -138,19 +148,13 @@ const Layout: FC = () => {
       <footer>
         <Container
           sx={(theme) => ({
-            background:
-              theme.palette.mode === 'light'
-                ? theme.palette.primary.light
-                : theme.palette.primary.dark,
-            color:
-              theme.palette.mode === 'light'
-                ? theme.palette.secondary.dark
-                : theme.palette.secondary.light,
+            background: theme.palette.primary.main,
+            color: theme.palette.secondary.main,
             minWidth: '100%',
           })}
           maxWidth='xl'
         >
-          <Grid container alignItems='center' justifyContent='spce-between' gap={2}>
+          <Grid container alignItems='center' justifyContent='space-around' spacing={3} p={3}>
             <Grid container item xs={12} sm={6} direction='column' gap={2}>
               <Grid
                 item
@@ -171,7 +175,7 @@ const Layout: FC = () => {
               >
                 {'Copyright © '}
                 <MuiLink
-                  color={theme.palette.secondary.contrastText}
+                  color={theme.palette.bright.main}
                   component={Link}
                   to={'https://www.linkedin.com/in/alaa-duridi-91743a203/'}
                   target='_blank'
@@ -188,13 +192,13 @@ const Layout: FC = () => {
               spacing={1}
               xs={12}
               sm={5}
-              sx={{ color: 'text.secondary' }}
             >
               <IconButton
                 href='https://github.com/AlaaDuridi'
                 target='_blank'
                 aria-label='X'
                 sx={{ alignSelf: 'center' }}
+                color={'secondary'}
               >
                 <GitHub />
               </IconButton>
@@ -203,6 +207,7 @@ const Layout: FC = () => {
                 target='_blank'
                 aria-label='LinkedIn'
                 sx={{ alignSelf: 'center' }}
+                color={'secondary'}
               >
                 <LinkedIn />
               </IconButton>
@@ -211,6 +216,7 @@ const Layout: FC = () => {
                 target='_blank'
                 aria-label='Facebook'
                 sx={{ alignSelf: 'center' }}
+                color={'secondary'}
               >
                 <Code />
               </IconButton>

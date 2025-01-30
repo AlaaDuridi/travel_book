@@ -7,6 +7,7 @@ import Cities from '../views/cities/cities.tsx';
 import ErrorBoundary from '../components/ErrorBoundary.tsx';
 import Loader from '../components/Loader.tsx';
 import Rooms from '../views/rooms/Rooms.tsx';
+import Home from '../views/home/Home.tsx';
 
 const Hotels = lazy(() => import('../views/hotels/hotels.tsx'));
 
@@ -20,7 +21,6 @@ const ProtectedRoute = ({ role, children }: { role: string; children: React.Reac
 
 const RedirectBasedOnRole = () => {
   const { user } = useAppSelector((state) => state.auth);
-
   if (user?.userType === 'Admin') {
     return <Navigate to='/admin' replace />;
   }
@@ -88,7 +88,7 @@ export default function RoutesIndex() {
               </ProtectedRoute>
             }
           >
-            <Route index element={<>User Home Page</>} />
+            <Route index element={<Home />} />
             <Route path='recent-hotels' element={<>Recently Visited Hotels</>} />
             <Route path='trending-destinations' element={<>Trending Destinations</>} />
           </Route>

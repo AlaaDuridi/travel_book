@@ -11,7 +11,7 @@ import {
 import { Visibility, VisibilityOff, Edit, Delete } from '@mui/icons-material';
 import { FC, useState } from 'react';
 import { ICity } from '../../types/models/city.model.ts';
-import { truncateText } from '../../constants/common.constants.ts';
+import { truncateText } from '../../util/common.utils.ts';
 
 interface ICityCardProps {
   city: ICity;

@@ -12,7 +12,7 @@ const linkStyle = {
 const NavbarLink: FC<INavbarLinkProps> = ({ onClick, href = '/', sx, scrollTo, children }) => {
   // Conditionally use react-scroll or react-router-dom's Link
   return scrollTo ? (
-    <Link to={scrollTo} smooth duration={500} offset={-70} style={linkStyle}>
+    <Link to={scrollTo} smooth duration={500} offset={-70}>
       <MuiLink component='span' variant='h6' sx={{ ...linkStyle, ...sx }} onClick={onClick}>
         {children}
       </MuiLink>

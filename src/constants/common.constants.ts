@@ -15,11 +15,6 @@ export enum ACTION_TYPES {
   EDIT = 'edit',
 }
 
-export const truncateText = (text: string, maxLength: number): string => {
-  if (text.length <= maxLength) return text;
-  return `${text.slice(0, maxLength)}...`;
-};
-
 export enum STATUS {
   IDLE = 'idle',
   LOADING = 'loading',

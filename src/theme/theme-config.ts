@@ -63,10 +63,10 @@ export const getThemeOptions = (mode: PaletteMode): ThemeOptions => {
     dark: '#1A202C',
   };
 
-  const primaryColor = '#827a9f';
+  const primaryColor = 'rgb(15, 29, 54)';
   // const primaryColor = "#eeaf02";
   // const secondaryColor = '#436d93';
-  const secondaryColor = '#9f7a8d'; //dusty pink
+  const secondaryColor = 'rgb(238, 116, 17)'; //dusty pink
   // const secondaryColor = '#7a9f95'; // muted tea
   // const secondaryColor = '#7a9f82'; //muted green
   // const secondaryColor = '#9f827a'; //soft brown
@@ -98,16 +98,16 @@ export const getThemeOptions = (mode: PaletteMode): ThemeOptions => {
         dark: muiGreen[800],
       },
       grey: {
-        50: '#FAFAFA',
-        100: '#F5F5F5',
-        200: '#EEEEEE',
-        300: '#E0E0E0',
-        400: '#BDBDBD',
-        500: '#9E9E9E',
+        50: isDark ? '#757575' : '#FAFAFA',
+        100: isDark ? '#616161' : '#F5F5F5',
+        200: isDark ? '#424242' : '#EEEEEE',
+        300: isDark ? '#212121' : '#E0E0E0',
+        400: isDark ? '#37474f' : '#BDBDBD',
+        500: isDark ? '#263238' : '#9E9E9E',
       },
       background: {
         default: isDark ? background.dark : background.light,
-        paper: isDark ? '#2D3748' : '#F7FAFC',
+        paper: isDark ? background.dark : background.light,
       },
       text: {
         primary: isDark ? '#FFFFFF' : '#1A202C',
@@ -169,11 +169,14 @@ export const getThemeOptions = (mode: PaletteMode): ThemeOptions => {
       },
       MuiButton: {
         styleOverrides: {
-          root: {
+          root: ({ theme }) => ({
             borderRadius: '24px',
             paddingBlock: '.9rem',
             paddingInline: '1.5rem',
-          },
+            '&:hover': {
+              backgroundColor: theme.palette.secondary.main,
+            },
+          }),
         },
       },
       MuiOutlinedInput: {
@@ -181,6 +184,21 @@ export const getThemeOptions = (mode: PaletteMode): ThemeOptions => {
           root: {
             borderRadius: '18px',
           },
+        },
+      },
+      MuiLink: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            color: theme.palette.text.primary,
+            fontWeight: 'bold',
+            textDecoration: 'none',
+            '&:hover': {
+              color: theme.palette.secondary.main,
+              textDecoration: 'underline',
+              textUnderlineOffset: '5px',
+              textDecorationThickness: '2px',
+            },
+          }),
         },
       },
     },
