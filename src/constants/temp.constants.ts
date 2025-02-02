@@ -14,7 +14,7 @@ export const searchResults = [
     amenities: [
       {
         id: 0,
-        name: 'wifi',
+        name: 'Free Wi-Fi',
         description: 'Very fast wifi in the room.',
       },
       {

@@ -8,6 +8,7 @@ import ErrorBoundary from '../components/ErrorBoundary.tsx';
 import Loader from '../components/Loader.tsx';
 import Rooms from '../views/rooms/Rooms.tsx';
 import Home from '../views/home/Home.tsx';
+import SearchPage from '../views/search/Search.tsx';
 
 const Hotels = lazy(() => import('../views/hotels/hotels.tsx'));
 
@@ -89,8 +90,8 @@ export default function RoutesIndex() {
             }
           >
             <Route index element={<Home />} />
-            <Route path='recent-hotels' element={<>Recently Visited Hotels</>} />
-            <Route path='trending-destinations' element={<>Trending Destinations</>} />
+            <Route path='search' element={<SearchPage />} />
+            <Route path='hotel/:hotelId' element={<>Trending Destinations</>} />
           </Route>
 
           {/* Fallback Route */}

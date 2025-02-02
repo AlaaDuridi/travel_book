@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState, FC } from 'react';
 import { ISearchProps } from './Search.types.ts';
-import { toast } from 'react-toastify';
 import useSearchResults from '../../hooks/useSearchResults.ts';
 import { IHomeResult } from '../../types/models/home.model.ts';
+import SearchResult from './SearchResult';
+import { Box, useTheme, CircularProgress, Typography } from '@mui/material';
 
 interface ISearchGridProps {
   props: ISearchProps;
@@ -13,6 +13,7 @@ interface ISearchGridProps {
 const SearchGrid: FC<ISearchGridProps> = ({ props }) => {
   const [searchParams] = useSearchParams();
   const [finalResults, setFinalResults] = useState<IHomeResult[]>([]);
+  const theme = useTheme();
   const {
     results,
     isLoading,
@@ -22,12 +23,12 @@ const SearchGrid: FC<ISearchGridProps> = ({ props }) => {
     updateSearchParams,
   } = useSearchResults();
 
-  const objSearchParams = Object.fromEntries([...searchParams]);
+  const queryParams = Object.fromEntries([...searchParams]);
   useEffect(() => {
     if (searchParams) {
       updateSearchParams({
         ...params,
-        ...objSearchParams,
+        ...queryParams,
       });
     }
   }, [searchParams]);
@@ -76,8 +77,17 @@ const SearchGrid: FC<ISearchGridProps> = ({ props }) => {
 
   return (
     <>
-      <div>is Loading ? {isLoading}</div>
-      <div>is Error ? {isError}</div>
+      {isLoading && <CircularProgress />}
+      {isError && <Typography color='error'>{error.message}</Typography>}
+      {finalResults.length > 0 ? (
+        finalResults.map((result) => (
+          <Box key={result.hotelId} sx={{ mb: theme.spacing(3) }}>
+            <SearchResult result={result} />
+          </Box>
+        ))
+      ) : (
+        <Typography>No results found.</Typography>
+      )}
     </>
   );
 };

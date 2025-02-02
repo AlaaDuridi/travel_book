@@ -36,4 +36,7 @@ export type IRoomType =
   | 'Executive Suite'
   | string;
 
-export type ISortBy = 'Price' | 'Rating' | string;
+export enum ISortBy {
+  PRICE = 'Price',
+  RATING = 'Rating',
+}
