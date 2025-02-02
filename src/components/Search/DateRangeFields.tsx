@@ -1,9 +1,9 @@
 import { FC, useState } from 'react';
-import { Box, Button, Typography, useTheme } from '@mui/material';
+import { Box, Button, Typography, useTheme, FormHelperText } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// import dayjs, {Dayjs} from 'dayjs';
+import { Field, ErrorMessage, FieldProps } from 'formik';
 import DateRangeIcon from '@mui/icons-material/DateRange';
 import dayjs from 'dayjs';
 
@@ -36,21 +36,53 @@ const ResponsiveDateFields: FC<IResponsiveDateFieldsProps> = ({
         <DateRangeIcon />
         <Typography fontWeight={500}>{`${checkInDate} - ${checkOutDate}`}</Typography>
       </Button>
+      <Box sx={{ display: isDateRangeBarOpen ? 'none' : 'block', mt: theme.spacing(1) }}>
+        <Field name='checkInDate'>
+          {({ meta }: FieldProps<string>) =>
+            meta.touched && meta.error ? <FormHelperText error>{meta.error}</FormHelperText> : null
+          }
+        </Field>
+        <Field name='checkOutDate'>
+          {({ meta }: FieldProps<string>) =>
+            meta.touched && meta.error ? <FormHelperText error>{meta.error}</FormHelperText> : null
+          }
+        </Field>
+      </Box>
       {isDateRangeBarOpen && (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <Box sx={{ display: 'flex', gap: 3 }}>
-            <DatePicker
-              label='Check-in Date'
-              value={dayjs(checkInDate)}
-              onChange={(date) => onCheckInChange(date?.format('YYYY-MM-DD') || '')}
-              minDate={dayjs()} // Prevents selecting past dates
-            />
-            <DatePicker
-              label='Check-out Date'
-              value={dayjs(checkOutDate)}
-              onChange={(date) => onCheckOutChange(date?.format('YYYY-MM-DD') || '')}
-              minDate={dayjs(checkInDate)} // Prevents selecting dates before check-in
-            />
+            <Field name='checkInDate'>
+              {({ field, meta }: FieldProps<string>) => (
+                <DatePicker
+                  label='Check-in Date'
+                  value={dayjs(field.value)}
+                  onChange={(date) => onCheckInChange(date?.format('YYYY-MM-DD') || '')}
+                  minDate={dayjs()}
+                  renderInput={(params) => (
+                    <>
+                      <params.TextField {...params} error={!!meta.error && meta.touched} />
+                      <ErrorMessage name='checkInDate' component={FormHelperText} />
+                    </>
+                  )}
+                />
+              )}
+            </Field>
+            <Field name='checkOutDate'>
+              {({ field, meta }: FieldProps<string>) => (
+                <DatePicker
+                  label='Check-out Date'
+                  value={dayjs(field.value)}
+                  onChange={(date) => onCheckOutChange(date?.format('YYYY-MM-DD') || '')}
+                  minDate={dayjs(checkInDate)}
+                  renderInput={(params) => (
+                    <>
+                      <params.TextField {...params} error={!!meta.error && meta.touched} />
+                      <ErrorMessage name='checkOutDate' component={FormHelperText} />
+                    </>
+                  )}
+                />
+              )}
+            </Field>
           </Box>
         </LocalizationProvider>
       )}

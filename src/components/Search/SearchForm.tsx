@@ -72,7 +72,7 @@ const SearchForm: FC<ISearchFormProps> = ({ isSearchPage = false }) => {
           }
         }}
       >
-        {({ values, setFieldValue, isSubmitting }) => (
+        {({ values, setFieldValue, touched, isValid, handleBlur, isSubmitting }) => (
           <Form>
             <Stack direction={{ md: 'row' }} spacing={2} alignItems='center'>
               <Grid
@@ -89,11 +89,7 @@ const SearchForm: FC<ISearchFormProps> = ({ isSearchPage = false }) => {
                     placeholder={'Enter your destination'}
                     value={values.city}
                     onChange={(e) => setFieldValue('city', e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                      }
-                    }}
+                    onBlur={handleBlur}
                   />
                 </Grid>
                 {/*check in - check out range*/}
@@ -213,7 +209,7 @@ const SearchForm: FC<ISearchFormProps> = ({ isSearchPage = false }) => {
               <Button
                 type={'submit'}
                 variant={'contained'}
-                disabled={isLoading || isSubmitting}
+                disabled={isLoading || (touched && !isValid) || isSubmitting}
                 endIcon={<SearchIcon />}
                 startIcon={(isLoading || isSubmitting) && <CircularProgress />}
               >
