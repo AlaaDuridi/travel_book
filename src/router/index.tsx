@@ -1,4 +1,3 @@
-import { Route, Navigate, Routes } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import Login from '../views/login/Login';
 import { useAppSelector } from '../store/hooks';
@@ -9,19 +8,73 @@ import Loader from '../components/Loader.tsx';
 import Rooms from '../views/rooms/Rooms.tsx';
 import Home from '../views/home/Home.tsx';
 import SearchPage from '../views/search/Search.tsx';
+import { QueryClient } from '@tanstack/react-query';
+import { hotelLoader } from '../loaders/hotel.ts';
+import HotelPage from '../views/hotel/Hotel.tsx';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import { DecodedJWTUser } from '../util/getDecodedJWT.ts';
+import { USER_TYPE } from '../constants/common.constants.ts';
 
 const Hotels = lazy(() => import('../views/hotels/hotels.tsx'));
-
-const ProtectedRoute = ({ role, children }: { role: string; children: React.ReactElement }) => {
+const RoutesIndex = ({ queryClient }: { queryClient: QueryClient }) => {
   const { user } = useAppSelector((state) => state.auth);
 
-  if (!user) return <Navigate to='/login' replace />;
-  if (user.userType !== role) return <Navigate to='/' replace />;
-  return children;
+  // Create the routes with loaders and protection
+  const router = createBrowserRouter([
+    {
+      path: '/login',
+      element: (
+        <PublicRoute user={user}>
+          <Login />
+        </PublicRoute>
+      ),
+    },
+    {
+      path: '/',
+      element: user ? <RedirectBasedOnRole user={user} /> : <Navigate to='/login' replace />,
+    },
+    {
+      path: '/admin',
+      element: user?.userType === USER_TYPE.ADMIN ? <Layout /> : <Navigate to='/' replace />,
+      children: [
+        { path: 'manage-cities', element: <Cities /> },
+        { path: 'manage-hotels', element: <Hotels /> },
+        { path: 'manage-rooms', element: <Rooms /> },
+      ],
+    },
+    {
+      path: '/user',
+      element: user?.userType === USER_TYPE.USER ? <Layout /> : <Navigate to='/' replace />,
+      children: [
+        { path: '', element: <Home /> },
+        { path: 'search', element: <SearchPage /> },
+        {
+          path: 'hotels/:hotelId',
+          element: <HotelPage />,
+          loader: hotelLoader(queryClient),
+        },
+      ],
+    },
+    {
+      path: '/not-found',
+      element: <div>Not found</div>,
+    },
+    {
+      path: '*',
+      element: <Navigate to='/not-found' replace />,
+    },
+  ]);
+
+  return (
+    <ErrorBoundary fallback={<h1>Something went wrong. Please try again later.</h1>}>
+      <Suspense fallback={<Loader />}>
+        <RouterProvider router={router} />
+      </Suspense>
+    </ErrorBoundary>
+  );
 };
 
-const RedirectBasedOnRole = () => {
-  const { user } = useAppSelector((state) => state.auth);
+const RedirectBasedOnRole = ({ user }: { user: DecodedJWTUser }) => {
   if (user?.userType === 'Admin') {
     return <Navigate to='/admin' replace />;
   }
@@ -31,73 +84,20 @@ const RedirectBasedOnRole = () => {
   return <Navigate to='/login' replace />;
 };
 
-const PublicRoute = ({ children }: { children: React.ReactElement }) => {
-  const { user } = useAppSelector((state) => state.auth);
-
-  // Redirect authenticated users to their appropriate page
+const PublicRoute = ({
+  user,
+  children,
+}: {
+  user: DecodedJWTUser | null;
+  children: React.ReactNode;
+}) => {
   if (user?.userType === 'Admin') {
     return <Navigate to='/admin' replace />;
   }
   if (user?.userType === 'User') {
     return <Navigate to='/user' replace />;
   }
-
-  // Allow unauthenticated users to access the route
-  return children;
+  return <>{children}</>;
 };
 
-export default function RoutesIndex() {
-  return (
-    <ErrorBoundary fallback={<h1>Something went wrong. Please try again later.</h1>}>
-      <Suspense fallback={<Loader />}>
-        <Routes>
-          {/* Public Routes */}
-          <Route
-            path='/login'
-            element={
-              <PublicRoute>
-                <Login />
-              </PublicRoute>
-            }
-          />
-          <Route path='/not-found' element={<>Not found</>} />
-
-          {/* Authenticated Routes */}
-          <Route path='/' element={<RedirectBasedOnRole />} />
-
-          {/* Admin Routes */}
-          <Route
-            path='/admin'
-            element={
-              <ProtectedRoute role='Admin'>
-                <Layout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<>Admin Home Page</>} />
-            <Route path='manage-cities' element={<Cities />} />
-            <Route path='manage-hotels' element={<Hotels />} />
-            <Route path='manage-rooms' element={<Rooms />} />
-          </Route>
-
-          {/* User Routes */}
-          <Route
-            path='/user'
-            element={
-              <ProtectedRoute role='User'>
-                <Layout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<Home />} />
-            <Route path='search' element={<SearchPage />} />
-            <Route path='hotel/:hotelId' element={<>Trending Destinations</>} />
-          </Route>
-
-          {/* Fallback Route */}
-          <Route path='*' element={<Navigate to='/not-found' replace />} />
-        </Routes>
-      </Suspense>
-    </ErrorBoundary>
-  );
-}
+export default RoutesIndex;

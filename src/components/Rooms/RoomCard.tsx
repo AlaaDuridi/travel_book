@@ -15,13 +15,21 @@ import {
   useTheme,
 } from '@mui/material';
 
-import { ChildCare, PeopleAlt, Delete, Edit } from '@mui/icons-material';
+import {
+  ChildCare,
+  PeopleAlt,
+  Delete,
+  Edit,
+  AddShoppingCart,
+  RemoveShoppingCart,
+} from '@mui/icons-material';
 import RoomActionDialog from './RoomActionDialog.tsx';
-import { ACTION_TYPES } from '../../constants/common.constants.ts';
-import { deleteAlert } from '../../util/swal.util.ts';
+import { ACTION_TYPES, USER_TYPE } from '../../constants/common.constants.ts';
+import { confirmAlert, deleteAlert } from '../../util/swal.util.ts';
 import { deleteRoomAsync } from '../../store/rooms/roomSlice.ts';
-import { useAppDispatch } from '../../store/hooks.ts';
+import { useAppDispatch, useAppSelector } from '../../store/hooks.ts';
 import Amenity from './Amenity.tsx';
+import { addToCart, removeFromCart } from '../../store/cart/cartSlice.ts';
 
 interface IRoomCardProps {
   room: IRoom;
@@ -31,6 +39,10 @@ const RoomCard: FC<IRoomCardProps> = ({ room }) => {
   const theme = useTheme();
   const [isEditRoomDialogOpen, setIsEditRoomDialogOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.auth);
+  const { bookedRooms } = useAppSelector((state) => state.cart);
+
+  const isBookedRoom = bookedRooms.some((item: IRoom) => item.roomNumber === room.roomNumber);
 
   const handleOpenDeleteDialog = async () => {
     await deleteAlert(
@@ -52,6 +64,13 @@ const RoomCard: FC<IRoomCardProps> = ({ room }) => {
   const handleOpenUpdateDialog = () => {
     setIsEditRoomDialogOpen(true);
   };
+  const handleAddToCart = async () => {
+    await confirmAlert(theme, async () => {
+      dispatch(isBookedRoom ? removeFromCart(room) : addToCart(room));
+    });
+  };
+
+  console.log('booked rooms', bookedRooms);
   return (
     <Card>
       <CardMedia
@@ -110,24 +129,39 @@ const RoomCard: FC<IRoomCardProps> = ({ room }) => {
         </Grid>
       </CardContent>
       <CardActions sx={{ justifyContent: 'space-between', px: theme.spacing(2) }}>
-        <Button
-          size='small'
-          startIcon={<Edit />}
-          variant='contained'
-          color='primary'
-          onClick={handleOpenUpdateDialog}
-        >
-          Edit
-        </Button>
-        <Button
-          size='small'
-          color='error'
-          startIcon={<Delete />}
-          variant='outlined'
-          onClick={handleOpenDeleteDialog}
-        >
-          Delete
-        </Button>
+        {user?.userType === USER_TYPE.ADMIN ? (
+          <>
+            <Button
+              size='small'
+              startIcon={<Edit />}
+              variant='contained'
+              color='primary'
+              onClick={handleOpenUpdateDialog}
+            >
+              Edit
+            </Button>
+            <Button
+              size='small'
+              color='error'
+              startIcon={<Delete />}
+              variant='outlined'
+              onClick={handleOpenDeleteDialog}
+            >
+              Delete
+            </Button>
+          </>
+        ) : (
+          <Button
+            size='small'
+            variant='contained'
+            color={isBookedRoom ? 'error' : 'primary'}
+            sx={{ m: 'auto' }}
+            endIcon={isBookedRoom ? <RemoveShoppingCart /> : <AddShoppingCart />}
+            onClick={handleAddToCart}
+          >
+            {isBookedRoom ? 'Remove from Cart' : 'Add to Cart'}
+          </Button>
+        )}
       </CardActions>
       {isEditRoomDialogOpen && (
         <RoomActionDialog

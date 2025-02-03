@@ -90,7 +90,7 @@ const FeaturedDealCard: FC<IFeaturedDealCardProps> = ({ deal }) => {
             variant='contained'
             color='primary'
             component={Link}
-            to={`hotel/${deal.hotelId}`}
+            to={`hotels/${deal.hotelId}`}
             sx={{
               m: 'auto',
               mb: theme.spacing(2),

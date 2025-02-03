@@ -4,8 +4,9 @@ import RoutesIndex from '../../router';
 import { useAppDispatch } from '../../store/hooks';
 import { fetchCities } from '../../store/cities/citySlice';
 import { fetchHotelsAsync } from '../../store/hotels/hotelSlice.ts';
+import { QueryClient } from '@tanstack/react-query';
 
-function App() {
+function App({ queryClient }: { queryClient: QueryClient }) {
   // const dispatch = useAppDispatch();
   //
   // useEffect(() => {
@@ -15,7 +16,7 @@ function App() {
 
   return (
     <>
-      <RoutesIndex />
+      <RoutesIndex queryClient={queryClient} />
     </>
   );
 }

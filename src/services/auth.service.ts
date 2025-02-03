@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
-import { BACKEND_HOST, USER_TYPE } from '../constants/common.constants.ts';
+import { BACKEND_HOST } from '../constants/common.constants.ts';
 import { ILoginCredentials, ILoginResponse } from '../types/models/auth.model.ts';
 
 const INDEX = `${BACKEND_HOST}/api/auth/authenticate`;
@@ -8,12 +8,10 @@ const INDEX = `${BACKEND_HOST}/api/auth/authenticate`;
 class AuthService {
   static async login(credentials: ILoginCredentials): Promise<ILoginResponse> {
     try {
-      // const response: AxiosResponse<ILoginResponse> = await axios.post(INDEX, credentials);
+      const response: AxiosResponse<ILoginResponse> = await axios.post(INDEX, credentials);
       return {
-        // userType: response.data.userType,
-        userType: USER_TYPE.ADMIN,
-        // authentication: response.data.authentication,
-        authentication: 'HVz7OK7M7wz6VQSKcOuo4aYk4bkWs9AknwAPaAo58e2c91b0',
+        userType: response.data.userType,
+        authentication: response.data.authentication,
       };
     } catch (error) {
       AuthService.handleError(error as AxiosError);

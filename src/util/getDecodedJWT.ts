@@ -21,9 +21,13 @@ import axios from 'axios';
  * "1"
  */
 export interface DecodedJWTUser {
-  id: string;
-  userName: string;
+  user_id: string;
   userType: string;
+  exp: number;
+  family_name: string;
+  given_name: string;
+  iss: string;
+  nbf: number;
 }
 
 axios.interceptors.request.use(
@@ -41,12 +45,9 @@ const getDecodedJWT = (): DecodedJWTUser | null => {
   if (!token) return null;
 
   try {
-    return {
-      id: '1',
-      userName: 'Alaa',
-      userType: 'User',
-    };
-    // return jwtDecode(token);
+    const user: DecodedJWTUser = jwtDecode(token);
+    console.log('decoded user is', user);
+    return user;
   } catch (error) {
     console.error('Invalid JWT:', error);
     return null;

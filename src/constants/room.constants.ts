@@ -24,6 +24,7 @@ export const INITIAL_ROOM: IRoom = {
 
 export enum AMENITY {
   FREE_WIFI = 'Free Wi-Fi',
+  'FREE_WI-FI' = 'Free Wi-Fi',
   TV = 'TV',
   AIR_CONDITIONING = 'Air Conditioning',
   JACUZZI = 'Jacuzzi',
@@ -40,4 +41,6 @@ export enum AMENITY {
   PLAY_AREA = 'Play Area',
   BUSINESS_CENTER_ACCESS = 'Business Center Access',
   MEETING_ROOM = 'Meeting Room',
+  FITNESS_CENTER = 'Fitness Center',
+  SWIMMING_POOL = 'Swimming Pool',
 }

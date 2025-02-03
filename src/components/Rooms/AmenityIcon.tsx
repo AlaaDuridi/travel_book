@@ -19,6 +19,8 @@ import {
   ViewComfy,
   Wifi,
   HelpOutline,
+  Pool,
+  FitnessCenter,
 } from '@mui/icons-material';
 
 interface IAmenityIconProps {
@@ -62,6 +64,10 @@ const AmenityIcon: FC<IAmenityIconProps> = ({ amenity }) => {
         return <BusinessCenter />;
       case AMENITY.MEETING_ROOM:
         return <MeetingRoom />;
+      case AMENITY.FITNESS_CENTER:
+        return <FitnessCenter />;
+      case AMENITY.SWIMMING_POOL:
+        return <Pool />;
       default:
         return <HelpOutline />;
     }

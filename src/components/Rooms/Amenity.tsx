@@ -10,6 +10,7 @@ interface IAmenityProps {
 }
 
 const Amenity: FC<IAmenityProps> = ({ amenity, index }) => {
+  console.log('key', amenity.name.toUpperCase().replace(/ /g, '_'));
   return (
     <Grid item xs={12} sm={6} key={index}>
       <Tooltip title={`${amenity.name}: ${amenity.description}`} arrow>

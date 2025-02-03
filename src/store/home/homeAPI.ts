@@ -52,7 +52,7 @@ export const trendingDestinationAPI = async (): Promise<ITrendingDestination[]> 
 };
 
 export const getRecentHotelsAPI = async (): Promise<IHomeResult[]> => {
-  const userId: number = Number(getDecodedJWT()?.id);
+  const userId: number = Number(getDecodedJWT()?.user_id);
   const response: AxiosResponse<IHomeResult[]> = await axios.get(
     `${INDEX}/users/${userId}/recent-hotels`,
   );

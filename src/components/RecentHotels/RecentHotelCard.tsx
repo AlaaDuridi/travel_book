@@ -89,7 +89,7 @@ const RecentlyVisitedHotelCard: FC<IRecentlyVisitedHotelCardProps> = ({ hotel })
             variant='contained'
             color='primary'
             component={Link}
-            to={`hotel/${hotel.hotelId}`}
+            to={`hotels/${hotel.hotelId}`}
             sx={{
               m: 'auto',
               mb: theme.spacing(2),
