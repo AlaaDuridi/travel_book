@@ -4,7 +4,7 @@ import { ISearchProps } from './Search.types.ts';
 import useSearchResults from '../../hooks/useSearchResults.ts';
 import { IHomeResult } from '../../types/models/home.model.ts';
 import SearchResult from './SearchResult';
-import { Box, useTheme, CircularProgress, Typography } from '@mui/material';
+import { Box, Grid, Container, useTheme, CircularProgress, Typography } from '@mui/material';
 
 interface ISearchGridProps {
   props: ISearchProps;
@@ -67,28 +67,20 @@ const SearchGrid: FC<ISearchGridProps> = ({ props }) => {
     if (results) void applyFilters();
   }, [props, results]);
 
-  console.log('finalResults', finalResults);
-  console.log('isLoading', isLoading);
-  console.log('isError', isError);
-  console.log('error', error);
-  console.log('results', results);
-  console.log('searchParams', searchParams);
-  console.log('params', params);
-
   return (
-    <>
+    <Grid container spacing={2} maxWidth={'xl'} sx={{ p: theme.spacing(3) }}>
       {isLoading && <CircularProgress />}
       {isError && <Typography color='error'>{error.message}</Typography>}
       {finalResults.length > 0 ? (
         finalResults.map((result) => (
-          <Box key={result.hotelId} sx={{ mb: theme.spacing(3) }}>
+          <Grid xs={12} lg={6} item key={result.hotelId} sx={{ mb: theme.spacing(3) }}>
             <SearchResult result={result} />
-          </Box>
+          </Grid>
         ))
       ) : (
         <Typography>No results found.</Typography>
       )}
-    </>
+    </Grid>
   );
 };
 

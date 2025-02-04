@@ -20,14 +20,14 @@ const SearchPage: FC = () => {
       </Box>
 
       {/* Main content area */}
-      <Grid container spacing={4}>
+      <Grid container spacing={4} justifyContent={'space-around'}>
         {/* Side Filters on the left */}
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={2} ml={2}>
           <SideFilters onFilter={handleFilter} />
         </Grid>
 
         {/* Search Results Grid in the center */}
-        <Grid item xs={12} md={9}>
+        <Grid item xs={12} md={8}>
           <SearchGrid props={filters} />
         </Grid>
       </Grid>

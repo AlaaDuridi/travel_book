@@ -109,7 +109,7 @@ const SearchResult: FC<ISearchResultProps> = ({ result }) => {
             variant='contained'
             color='primary'
             component={Link}
-            to={`hotels/${hotelId}`}
+            to={`/user/hotels/${hotelId}`}
             sx={{
               m: 'auto',
               mb: theme.spacing(2),

@@ -23,6 +23,7 @@ const CitiesFilterSelect: FC<ICitiesFilterSelectProps> = ({
       value={selectedItemId || ''}
       onChange={handleItemChange}
       displayEmpty
+      label={'Select city'}
       inputProps={{ 'aria-label': 'Select city' }}
     >
       <MenuItem value='' disabled={disableAll}>
