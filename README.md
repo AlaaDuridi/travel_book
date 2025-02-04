@@ -72,26 +72,53 @@ Package Manager
 
 ## 4.1 Visual Gallery
 
+![image](https://github.com/user-attachments/assets/cca636c7-718e-428a-ab61-fb200c30c923)
+
 ## 4.2 Detailed Hotel Information
+
+![image](https://github.com/user-attachments/assets/f0b1f68a-1dc6-45f0-9269-b7081d1d9f4e)
 
 ## 4.3 Room Availability and Selection
 
+![image](https://github.com/user-attachments/assets/ada4c851-e20d-4403-95e9-6c312f1f8344)
+
+![image](https://github.com/user-attachments/assets/233ed49d-5d6f-40e9-ac2a-7ee75c1a10a6)
+
 ### 5. Secure Checkout and Confirmation
+
+![image](https://github.com/user-attachments/assets/02ff2a81-2f19-41bd-895d-7b25d98afa7a)
 
 ## 5.1 User Information and Payment
 
+![image](https://github.com/user-attachments/assets/408e94db-0b9a-45f2-a0c6-b743e3e3e1e9)
+
 ## 5.2 Confirmation Page
+
+![image](https://github.com/user-attachments/assets/82266a1e-0f35-4bc2-9e9f-c5643ddef9da)
+
+![image](https://github.com/user-attachments/assets/2bc5cc81-5bd3-4e2d-886a-b95c5abe1581)
 
 ### 6. Admin Page for Easy Management
 
+![image](https://github.com/user-attachments/assets/7db2a3cd-9e02-492a-806c-89895eb60d1d)
+
+![image](https://github.com/user-attachments/assets/249c2a8e-ccbf-4c9c-b370-3e37ad4c8e32)
+
+![image](https://github.com/user-attachments/assets/68227d03-2b0b-4215-813f-df42a4d83835)
+
 ## 6.1 Functional  Navigation
+Navigator with links to Cities, Hotels, and Rooms.
 
 ## 6.2 Admin Search Bar
+Filters for the grids.
 
 ## 6.3 Detailed Grids
+Detailed information and management options for Cities, Hotels, and Rooms.
 
 ## 6.4 Create Button
+Form for creating new entities like Cities, Hotels, or Rooms.
 
 ## 6.5 Entity Update Form
+Forms for updating information on entities within the platform.
 
 
