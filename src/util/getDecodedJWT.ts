@@ -45,9 +45,7 @@ const getDecodedJWT = (): DecodedJWTUser | null => {
   if (!token) return null;
 
   try {
-    const user: DecodedJWTUser = jwtDecode(token);
-    console.log('decoded user is', user);
-    return user;
+    return jwtDecode(token);
   } catch (error) {
     console.error('Invalid JWT:', error);
     return null;

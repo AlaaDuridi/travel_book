@@ -5,9 +5,7 @@ export const DEFAULT_SELECTED_HOTEL_ID: number = 260;
 
 export const DEFAULT_CHECK_IN_DATE: string = dayjs(new Date()).format('YYYY-MM-DD');
 
-export const DEFAULT_CHECK_OUT_DATE: string = dayjs(DEFAULT_CHECK_IN_DATE)
-  .add(1, 'day')
-  .format('YYYY-MM-DD');
+export const DEFAULT_CHECK_OUT_DATE: string = dayjs(new Date()).add(1, 'day').format('YYYY-MM-DD');
 
 export const INITIAL_ROOM: IRoom = {
   id: 0,

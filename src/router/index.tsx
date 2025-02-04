@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import Login from '../views/login/Login';
 import { useAppSelector } from '../store/hooks';
 import Layout from '../components/Layout/Layout.tsx';
@@ -11,14 +11,15 @@ import SearchPage from '../views/search/Search.tsx';
 import { QueryClient } from '@tanstack/react-query';
 import { hotelLoader } from '../loaders/hotel.ts';
 import HotelPage from '../views/hotel/Hotel.tsx';
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate, useLocation } from 'react-router-dom';
 import { DecodedJWTUser } from '../util/getDecodedJWT.ts';
 import { USER_TYPE } from '../constants/common.constants.ts';
+import Checkout from '../views/checkout/Checkout.tsx';
+import Confirmation from '../views/confirmation/Confirmation.tsx';
 
 const Hotels = lazy(() => import('../views/hotels/hotels.tsx'));
 const RoutesIndex = ({ queryClient }: { queryClient: QueryClient }) => {
   const { user } = useAppSelector((state) => state.auth);
-
   // Create the routes with loaders and protection
   const router = createBrowserRouter([
     {
@@ -52,6 +53,14 @@ const RoutesIndex = ({ queryClient }: { queryClient: QueryClient }) => {
           path: 'hotels/:hotelId',
           element: <HotelPage />,
           loader: hotelLoader(queryClient),
+        },
+        {
+          path: 'checkout',
+          element: <Checkout />,
+        },
+        {
+          path: 'confirmation',
+          element: <Confirmation />,
         },
       ],
     },

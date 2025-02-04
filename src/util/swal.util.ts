@@ -136,24 +136,20 @@ export const confirmAlert = async (
     },
     buttonsStyling: false,
   });
-
   if (result.isConfirmed) {
-    Swal.fire({
-      title: 'Processing...',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      },
-    });
     try {
       await onConfirm();
+
       Swal.fire({
         title: 'Confirmed!',
         text: confirmMessage ? confirmMessage : 'The action has been completed successfully.',
         icon: 'success',
         iconColor: theme.palette.primary.main,
+        background: theme.palette.background.default,
+        color: theme.palette.text.primary,
         confirmButtonText: 'OK',
         customClass: {
+          title: 'swal2-title',
           confirmButton: 'swal2-confirm',
         },
         buttonsStyling: false,

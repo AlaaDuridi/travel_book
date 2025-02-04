@@ -32,6 +32,8 @@ const Layout: FC = () => {
   const navigate = useNavigate();
 
   const { user } = useAppSelector((state) => state.auth);
+  const { bookedRooms } = useAppSelector((state) => state.cart);
+
   const handleLogout = () => {
     dispatch(signout());
     navigate('/login');
@@ -71,7 +73,7 @@ const Layout: FC = () => {
             href: '/user/checkout',
             children: (
               <Typography variant='h6' sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <CheckoutBadge numberOfBookedRooms={5} />
+                <CheckoutBadge numberOfBookedRooms={bookedRooms.length} />
                 Checkout
               </Typography>
             ),

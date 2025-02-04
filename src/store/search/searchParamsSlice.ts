@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IHomeSearchRequestParams } from '../../types/models/home.model.ts';
+import { DEFAULT_CHECK_IN_DATE, DEFAULT_CHECK_OUT_DATE } from '../../constants/room.constants.ts';
 
 interface SearchState {
   params: IHomeSearchRequestParams;
@@ -8,8 +9,8 @@ interface SearchState {
 const initialState: SearchState = {
   params: {
     city: '',
-    checkInDate: '',
-    checkOutDate: '',
+    checkInDate: DEFAULT_CHECK_IN_DATE,
+    checkOutDate: DEFAULT_CHECK_OUT_DATE,
     numberOfRooms: 1,
     adults: 2,
     children: 0,

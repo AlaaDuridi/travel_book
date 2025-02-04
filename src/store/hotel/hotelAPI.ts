@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { BACKEND_HOST } from '../../constants/common.constants.ts';
 import { IHotelDetails, IHotelGallery, IHotelReview } from '../../types/models/hotel.model.ts';
 import { IRoom } from '../../types/models/room.model.ts';
-import dayjs from 'dayjs';
+import { DEFAULT_CHECK_IN_DATE, DEFAULT_CHECK_OUT_DATE } from '../../constants/room.constants.ts';
 
 const INDEX = `${BACKEND_HOST}/api/hotels`;
 
@@ -43,8 +43,8 @@ export const getAvailableRooms = async (hotelId: number): Promise<IRoom[]> => {
       `${INDEX}/${hotelId}/available-rooms`,
       {
         params: {
-          checkInDate: dayjs(new Date()).format('YYYY-MM-DD'),
-          CheckOutDate: dayjs(new Date()).add(1, 'day').format('YYYY-MM-DD'),
+          checkInDate: DEFAULT_CHECK_IN_DATE,
+          CheckOutDate: DEFAULT_CHECK_OUT_DATE,
         },
       },
     );
