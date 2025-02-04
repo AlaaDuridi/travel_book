@@ -18,7 +18,7 @@ import { IBookingResponse } from '../../types/models/booking.model.ts';
 
 const PaymentHistory = () => {
   const { bookings } = useAppSelector((state) => state.booking);
-  const [openDetails, setOpenDetails] = useState<number | null>(null); // Track the open details for each booking
+  const [openDetails, setOpenDetails] = useState<number | null>(null);
 
   const printInvoice = (payment: IBookingResponse[]) => {
     const printWindow = window.open('', '_blank', 'width=800, height=600');
