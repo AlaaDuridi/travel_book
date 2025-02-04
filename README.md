@@ -1,4 +1,4 @@
-### Travel and Accommodation Booking Platform
+### Travel and Accommodation Booking Platform 🧳
 
 <p>A web application designed to
 facilitate the booking of hotels and accommodations.
@@ -46,22 +46,29 @@ Package Manager
 ## Features
 
 ### 1. Login Page
+![image](https://github.com/user-attachments/assets/fe12d006-6bec-4464-9ed1-e369d4c4e57b)
 
 ### 2. Home Page
+![image](https://github.com/user-attachments/assets/f83ef4a4-d630-42dd-ba0d-58a0a2eac4c6)
 
 ## 2.1 Robust Search Functionality
+![image](https://github.com/user-attachments/assets/69acc6e9-b21b-4b43-b53d-948c2a5b987a)
 
 ## 2.2 Featured Deals Section
+![image](https://github.com/user-attachments/assets/f17e5098-4a9b-4f2b-adbd-effcb94cdf0a)
 
 ## 2.3 User's Recently Visited Hotels
+![image](https://github.com/user-attachments/assets/86a0fddc-830f-4da0-ba8c-47095da58b8e)
 
 ## 2.4 Trending Destination Highlights
-
+![image](https://github.com/user-attachments/assets/30acbb0f-ed75-4e02-a1ff-297ce226f0ac)
 ### 3. Search Results Page
+![image](https://github.com/user-attachments/assets/0e41531d-3c18-4681-85c1-40be27c894b7)
 
 ## 3.1 Comprehensive Search Filters
-
+- Sidebar with filters for price range, star rating, and amenities.
 ## 3.2 Hotel Listings
+- Listings of hotels matching search criteria.
 
 ## 4.1 Visual Gallery
 
