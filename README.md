@@ -121,4 +121,12 @@ Form for creating new entities like Cities, Hotels, or Rooms.
 ## 6.5 Entity Update Form
 Forms for updating information on entities within the platform.
 
+##  Acknowledgement 🌸
+
+I extend my sincere gratitude to **Foothill Technology Solutions** for granting me the opportunity to participate in this internship cycle. Their unwavering support has been instrumental throughout the development of this project.
+
+<p align="center">
+  <img src="https://github.com/Rahaf-Mansour/fts-portfolio/assets/109438456/6c99016a-121f-43ac-a7eb-bb07321917e9" alt="fts-logo" width="250">
+</p>
+
 
