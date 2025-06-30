@@ -29,7 +29,7 @@ const LoginForm: FC = () => {
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { status } = useAppSelector((state) => state.auth);
+  const  status  = useAppSelector((state) => state.auth.status);
   const isLoading = status === 'loading';
 
   const handleSubmit = async (values: ILoginCredentials) => {
